@@ -1,0 +1,148 @@
+import { useEffect, useState } from "react";
+import type { ChangeEvent, FC, SubmitEvent, MouseEvent } from 'react'
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FaEyeSlash, FaEye } from 'react-icons/fa';
+import { Container } from "./styled"
+import { BASE_URL } from "../../constants/url";
+import { useGlobal } from "../../hooks/useGlobal";
+import { ProviderRoutes } from "../../routes/paths";
+
+
+
+interface FormData{
+    email:string
+    password:string
+}
+
+
+
+const Login:FC = ()=>{
+    const navigate = useNavigate();
+    const { providerToken, loading, loginProvider } = useGlobal();    
+    const [showPass, setShowPass] = useState<boolean>(false);
+    const [form, setForm] = useState<FormData>({
+        email: 'disk90@email.com',
+        password: '123456'
+    });
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+
+
+    useEffect(()=>{
+        if(!loading && providerToken){
+            navigate(ProviderRoutes.ORDERS, { replace: true })
+        }
+    }, [providerToken, loading, navigate])
+
+
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>):void=>{
+        const { name, value } = e.target
+        setForm(prev => ({ ...prev, [name]: value }))
+    }
+
+
+    const handleClearForm = (e:MouseEvent<HTMLButtonElement>):void=>{
+        e.preventDefault()
+        setForm({ email: '', password: '' })
+    }
+
+
+    const handleFormSubmit = async(e:SubmitEvent<HTMLFormElement>):Promise<void>=>{
+        e.preventDefault()
+        if(isSubmitting) return
+
+        try{
+            setIsSubmitting(true)
+
+            const response = await axios.post(`${BASE_URL}/login_restaurant`, {
+                email: form.email,
+                password: form.password
+            })
+
+            loginProvider(response.data)
+            navigate(ProviderRoutes.ORDERS)
+        }catch(e:any){
+            console.error("Login stream execution failed:", e);
+            alert(e.response?.data || "An error occurred while logging in.")
+        }finally{
+            setIsSubmitting(false)
+        }
+    }
+
+    if (loading) {
+        return <div style={{ textAlign: "center", marginTop: "20vh" }}>Authenticating workspace...</div>;
+    }
+
+
+    return(
+        <Container>
+            <div className="title">Login</div>
+            
+            <form onSubmit={handleFormSubmit}>
+                <div className="input-icon-container">
+                <label htmlFor="login-email" className="sr-only">Email</label>
+                <input
+                    id="login-email"
+                    type="email"
+                    className="form-input"
+                    name="email"
+                    value={form.email}
+                    onChange={handleInputChange}
+                    placeholder="name@email.com"
+                    aria-label="Endereço de email"
+                    autoFocus
+                    disabled={isSubmitting}
+                    required
+                />
+
+                <label htmlFor="login-password" className="sr-only">Senha</label>
+                <div style={{ position: 'relative', width: '100%' }}>
+                    <input
+                    id="login-password"
+                    type={showPass ? 'text' : 'password'}
+                    name="password"
+                    className="form-input"
+                    value={form.password}
+                    onChange={handleInputChange}
+                    placeholder="Sua senha"
+                    aria-label="Senha"
+                    disabled={isSubmitting}
+                    required
+                    />
+                    <div 
+                    className="eye-icon-wrapper" 
+                    onClick={() => setShowPass(prev => !prev)}
+                    style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', display: 'flex' }}
+                    >
+                    {showPass ? <FaEye size={18} /> : <FaEyeSlash size={18} />}
+                    </div>
+                </div>
+                </div>
+
+                <div className="btn-container">
+                <button 
+                    type="button" 
+                    className="login-button clear-btn" 
+                    onClick={handleClearForm}
+                    disabled={isSubmitting}
+                >
+                    Clear
+                </button>
+                
+                <button 
+                    type="submit" 
+                    className="login-button"
+                    disabled={isSubmitting}
+                >
+                    {isSubmitting ? "Loading..." : "Enter"}
+                </button>
+                </div>
+            </form>
+        </Container>
+    )
+
+}
+
+
+export default Login
