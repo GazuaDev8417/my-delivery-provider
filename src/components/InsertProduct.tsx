@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, type SubmitEvent, useState, type FC, useMemo } from 'react';
+import { type ChangeEvent, type SubmitEvent, useState, type FC } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 
