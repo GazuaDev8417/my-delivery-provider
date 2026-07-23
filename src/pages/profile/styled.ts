@@ -36,20 +36,6 @@ export const Container = styled.div`
         color: #555;
     }
 
-    .address-section {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        background-color: #f7f7f7; /* Softer, modern light gray background */
-        padding: 20px;
-        line-height: 1.8;
-        border-radius: 12px;
-        margin-top: 25px;
-        border: 1px solid #e0e0e0;
-        box-sizing: border-box;
-    }
-
     .registered-address {
         font-weight: 600;
         font-size: 1.2rem;

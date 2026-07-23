@@ -9,6 +9,8 @@ const Orders = lazy(() => import('../pages/orders/Orders'))
 const ClientData = lazy(() => import('../pages/clientData/ClientData'))
 const Home = lazy(() => import('../pages/home/Home'))
 const Profile = lazy(() => import ('../pages/profile/Profile'))
+const EditProfile = lazy(() => import ('../pages/editProfile/EditProfile'))
+
 
 const ProtectedRoute: FC = () => {
   const { providerToken, loading } = useGlobal()
@@ -46,6 +48,7 @@ const Router: FC = () => {
           <Route path={ProviderRoutes.CLIENT_DATA} element={<ClientData />} />
           <Route path={ProviderRoutes.HOME} element={<Home />} />
           <Route path={ProviderRoutes.PROFILE} element={<Profile />} />
+          <Route path={ProviderRoutes.EDIT_PROFILE} element={<EditProfile />} />
         </Route>
 
         {/* 🔍 Catch-all Fallback */}

@@ -2,7 +2,6 @@ import { type ChangeEvent, type FC, useEffect, useRef, useState, useMemo, useCal
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { MdFeed } from "react-icons/md";
-import { AiOutlineLogout } from 'react-icons/ai';
 import { BsFillPersonFill } from "react-icons/bs"
 import { IoMdAddCircle, IoMdCloseCircle } from "react-icons/io";
 import { Container } from './styled';
@@ -10,9 +9,12 @@ import { BASE_URL } from "../../constants/url";
 import Header from "../../components/Header";
 import InsertProduct from "../../components/InsertProduct";
 import UpdateProduct from "../../components/UpdateProduct";
-import type { Products, Restaurant } from "../../types/types";
+import type { Products } from "../../types/types";
 import { useGlobal } from "../../hooks/useGlobal";
 import { ProviderRoutes } from "../../routes/paths";
+
+
+
 
 type GroupedProducts = {
   category: string;
@@ -21,9 +23,11 @@ type GroupedProducts = {
 
 type Screen = 'list' | 'insert' | 'update';
 
+
+
 const Home: FC = () => {
   const navigate = useNavigate();
-  const { providerToken } = useGlobal();
+  const { providerToken, getProfile, user } = useGlobal();
   const productsRef = useRef<HTMLDivElement | null>(null);
 
   // Core UI states
@@ -32,17 +36,9 @@ const Home: FC = () => {
   const [screen, setScreen] = useState<Screen>('list');
   const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [openCategory, setOpenCategory] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  
-  const [menu, setMenu] = useState<Restaurant>({
-    address: '',
-    category: '',
-    email: '',
-    id: '',
-    logourl: '',
-    name: '',
-    phone: '',
-  });
+  const [isLoading, setIsLoading] = useState<boolean>(true); 
+
+
 
 
   // 🛡️ Memoize Authorization Headers
@@ -54,8 +50,7 @@ const Home: FC = () => {
   const fetchRestaurantProfile = useCallback(async () => {
     try {
       setIsLoading(true);
-      const restaurantRes = await axios.get<Restaurant>(`${BASE_URL}/restaurants`, requestConfig);
-      setMenu(restaurantRes.data);
+      getProfile()
 
       const productsRes = await axios.get<Products[]>(`${BASE_URL}/restaurants/products`, requestConfig);
       setProducts(productsRes.data);
@@ -151,12 +146,12 @@ const Home: FC = () => {
       
       <Container>
         <div className="card">
-          <div className="rest-name">{menu.name}</div>
+          <div className="rest-name">{user?.name}</div>
           
-          {menu.logourl && (
+          {user?.logourl && (
             <img 
-              src={`/imgs/restaurants/${menu.logourl}`}
-              alt={menu.name || "Logo do Restaurante"}
+              src={`/imgs/restaurants/${user?.logourl}`}
+              alt={user?.name || "Logo do Restaurante"}
               className="image"
               onError={(e) => {
                 // Fallback rendering asset if target disk reference is broken

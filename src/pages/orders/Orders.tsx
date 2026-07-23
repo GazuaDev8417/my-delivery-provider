@@ -6,7 +6,7 @@ import { BASE_URL } from "../../constants/url"
 import Header from "../../components/Header"
 import { useGlobal } from "../../hooks/useGlobal"
 import { ProviderRoutes } from "../../routes/paths"
-import type { Order, Restaurant, GroupedProducts } from "../../types/types"
+import type { Order, GroupedProducts } from "../../types/types"
 import { Container } from "./styled"
 
 
@@ -14,8 +14,7 @@ import { Container } from "./styled"
 
 const Orders:FC = ()=>{
     const navigate = useNavigate()
-    const { providerToken } = useGlobal()
-    const [restaurant, setRestaurant] = useState<Restaurant | null>(null)
+    const { providerToken, getProfile, user } = useGlobal()
     const [orders, setOrders] = useState<Order[]>([])
     const [openState, setOpenState] = useState<string | null>(null)
     const [isUiLoading, setIsUiLoading] = useState<boolean>(true)
@@ -31,9 +30,7 @@ const Orders:FC = ()=>{
         try{
             setIsUiLoading(true)
 
-            axios.get<Restaurant>(`${BASE_URL}/restaurants`, requestConfig)
-                .then(res => setRestaurant(res.data))
-                .catch(e => console.error('Failed to load restaurant: ', e))
+            getProfile()
             
             const ordersRes = await axios.get<Order[]>(`${BASE_URL}/orders/all`, requestConfig)
             setOrders(ordersRes.data)
@@ -110,7 +107,7 @@ const Orders:FC = ()=>{
             />
 
             <Container>
-                <h1>{restaurant?.name || 'Loading Place...'}</h1>
+                <h1>{user?.name || 'Loading Place...'}</h1>
                 <hr style={{ width: '100%', marginBottom: '15px', background: 'lightgray', border: 'none', height: '1px' }} />
                 
                 <div style={{textAlign:'center'}}>
