@@ -155,7 +155,7 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
     try {
       setIsSubmitting(true);
       
-      await axios.post(`${BASE_URL}/my-delivery-insert/products`, formData, {
+      await axios.post(`${BASE_URL}/restaurants/product`, formData, {
         headers: {
           Authorization: providerToken || '',
           'Content-Type': 'multipart/form-data'
@@ -166,7 +166,10 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
       setScreen('list');
     } catch (error: any) {
       console.error("Failed to commit item onto menu database tree:", error);
-      alert(error.response?.data || "Ocorreu um erro ao registrar o produto. Verifique os dados.");
+      alert(error?.response?.data?.message ||
+        error?.response?.data ||
+        "An error occured while registering product."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -181,7 +184,7 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
           name="category"
           value={form.category}
           onChange={handleInputChange}
-          placeholder="Categoria (Ex: Bebidas, Pizzas)"
+          placeholder="Category"
           disabled={isSubmitting}
           required
         />
@@ -192,7 +195,7 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
           name="description"
           value={form.description}
           onChange={handleInputChange}
-          placeholder="Descrição dos ingredientes"
+          placeholder="Description"
           disabled={isSubmitting}
           required
         />
@@ -203,13 +206,13 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
           name="name"
           value={form.name}
           onChange={handleInputChange}
-          placeholder="Nome do produto"
+          placeholder="Product name"
           disabled={isSubmitting}
           required
         />
 
         <div className="photo-container">
-          <label htmlFor="photo">Imagem do Produto</label>
+          <label htmlFor="photo">Product image</label>
           <input
             id="photo"
             type="file"
@@ -228,7 +231,7 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
           name="price"
           value={form.price}
           onChange={handleInputChange}
-          placeholder="Preço (R$ 0.00)"
+          placeholder="Price (R$ 0.00)"
           disabled={isSubmitting}
           required
         />
@@ -239,14 +242,14 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
             disabled={isSubmitting} 
             onClick={handleClearForm}
           >
-            Limpar
+            Clear
           </button>
           
           <button 
             type="submit" 
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Registrando...' : 'Registrar Produto'}
+            {isSubmitting ? 'Resgistering...' : 'Register'}
           </button>
         </div>
       </form>

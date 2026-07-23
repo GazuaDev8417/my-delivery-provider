@@ -27,7 +27,7 @@ const ProtectedRoute: FC = () => {
 
 const NotFound: FC = () => (
   <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20vh' }}>
-    404 - Página não encontrada
+    404 - Page not found
   </h1>
 );
 

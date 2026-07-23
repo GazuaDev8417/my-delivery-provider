@@ -96,4 +96,4 @@ Allows full administration of the restaurant profile and menu catalog.
 
 Developed by **Flamarion França** \
 Portolio page: https://portfolio-vtu0.onrender.com \
-Application link: 
+Application link: https://my-delivery-provider.vercel.app

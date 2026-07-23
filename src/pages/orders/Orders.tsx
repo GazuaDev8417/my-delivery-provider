@@ -31,11 +31,11 @@ const Orders:FC = ()=>{
         try{
             setIsUiLoading(true)
 
-            axios.get<Restaurant>(`${BASE_URL}/restaurant`, requestConfig)
+            axios.get<Restaurant>(`${BASE_URL}/restaurants`, requestConfig)
                 .then(res => setRestaurant(res.data))
                 .catch(e => console.error('Failed to load restaurant: ', e))
             
-            const ordersRes = await axios.get<Order[]>(`${BASE_URL}/restaurant/orders`, requestConfig)
+            const ordersRes = await axios.get<Order[]>(`${BASE_URL}/orders/all`, requestConfig)
             setOrders(ordersRes.data)
 
             if(ordersRes.data.length > 0 && !openState){
@@ -59,7 +59,7 @@ const Orders:FC = ()=>{
         if(!confirmDelete) return
 
         try{
-            await axios.delete(`${BASE_URL}/order/${order.id}`, requestConfig)
+            await axios.delete(`${BASE_URL}/orders/${order.id}`, requestConfig)
             await fetchDashboardData()
         }catch(e:any){
             console.error('Failed to eliminate specified order path:', e?.response?.data || e.message)

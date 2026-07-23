@@ -116,7 +116,7 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
   const loadProductDetails = useCallback(async () => {
     try {
       setIsUiLoading(true);
-      const res = await axios.get(`${BASE_URL}/product/${product}`, requestConfig);
+      const res = await axios.get(`${BASE_URL}/restaurants/product/${product}`, requestConfig);
       
       setForm({
         category: res.data.category || '',
@@ -126,7 +126,7 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
       });
     } catch (error: any) {
       console.error("Failed to fetch product values from service database:", error);
-      alert("Não foi possível carregar os detalhes do produto.");
+      alert("An error occurred while loading products details.");
       setScreen('list');
     } finally {
       setIsUiLoading(false);
@@ -186,7 +186,7 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
     try {
       setIsSubmitting(true);
       
-      await axios.patch(`${BASE_URL}/my-delivery-upload/product/${product}`, formData, {
+      await axios.put(`${BASE_URL}/restaurants/product/${product}`, formData, {
         headers: {
           Authorization: providerToken || '',
           'Content-Type': 'multipart/form-data'
@@ -197,14 +197,17 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
       setScreen('list');
     } catch (error: any) {
       console.error("Failed to commit item updates onto database:", error);
-      alert(error.response?.data || "Ocorreu um erro ao atualizar o produto. Verifique os dados.");
+      alert(
+        error?.response?.data?.message || 
+        error?.response?.data ||
+        "An error occurred while updating product.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   if (isUiLoading) {
-    return <div style={{ textAlign: "center", padding: "1.5rem", color: "#64748b" }}>Buscando detalhes do produto...</div>;
+    return <div style={{ textAlign: "center", padding: "1.5rem", color: "#64748b" }}>Loading products details...</div>;
   }
 
   return (
@@ -216,7 +219,7 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
           name="category"
           value={form.category}
           onChange={handleInputChange}
-          placeholder="Categoria (Ex: Bebidas, Pizzas)"
+          placeholder="Category"
           disabled={isSubmitting}
           required
         />
@@ -227,7 +230,7 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
           name="description"
           value={form.description}
           onChange={handleInputChange}
-          placeholder="Descrição dos ingredientes"
+          placeholder="Description"
           disabled={isSubmitting}
           required
         />
@@ -238,13 +241,13 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
           name="name"
           value={form.name}
           onChange={handleInputChange}
-          placeholder="Nome do produto"
+          placeholder="Name of the product"
           disabled={isSubmitting}
           required
         />
 
         <div className="photo-container">
-          <label htmlFor="photo">Substituir Imagem do Produto (Opcional)</label>
+          <label htmlFor="photo">Change product image (Optional)</label>
           <input
             id="photo"
             type="file"
@@ -280,7 +283,7 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
             type="submit" 
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
+            {isSubmitting ? 'Saving...' : 'Update'}
           </button>
         </div>
       </form>

@@ -55,7 +55,7 @@ const Login:FC = ()=>{
         try{
             setIsSubmitting(true)
 
-            const response = await axios.post(`${BASE_URL}/login_restaurant`, {
+            const response = await axios.post(`${BASE_URL}/restaurants/login`, {
                 email: form.email,
                 password: form.password
             })
@@ -63,8 +63,7 @@ const Login:FC = ()=>{
             loginProvider(response.data)
             navigate(ProviderRoutes.ORDERS)
         }catch(e:any){
-            console.error("Login stream execution failed:", e);
-            alert(e.response?.data || "An error occurred while logging in.")
+            alert(e?.response?.data?.message || e?.message || e?.response?.data)
         }finally{
             setIsSubmitting(false)
         }

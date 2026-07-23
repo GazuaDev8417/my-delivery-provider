@@ -36,8 +36,8 @@ const ClientData:FC = ()=>{
 
         try{
             const [profileRes, historyRes] = await Promise.all([
-                axios.get<User>(`${BASE_URL}/profile/${userId}`, requestConfig),
-                axios.get<Order[]>(`${BASE_URL}/user/active_orders/${userId}`, requestConfig)
+                axios.get<User>(`${BASE_URL}/users/profile/${userId}`, requestConfig),
+                axios.get<Order[]>(`${BASE_URL}/orders/user/${userId}`, requestConfig)
             ]);
 
             setUser(profileRes.data)
@@ -60,14 +60,14 @@ const ClientData:FC = ()=>{
         if(isMutating) return
 
         const endpointPath = targetState === 'finish'
-        ? `${BASE_URL}/finish_order/${orderId}`
-        : `${BASE_URL}/return_order/${orderId}`
+        ? `${BASE_URL}/orders/${orderId}/finish`
+        : `${BASE_URL}/orders/${orderId}/revert`
 
         try{
             setIsMutating(true)
             await axios.patch(endpointPath, {}, requestConfig)
 
-            const refreshOrders = await axios.get<Order[]>(`${BASE_URL}/user/active_orders/${userId}`, requestConfig)
+            const refreshOrders = await axios.get<Order[]>(`${BASE_URL}/orders/user/${userId}`, requestConfig)
             setOrders(refreshOrders.data)
         }catch(e){
             console.error(`Failed to execute state transition to ${targetState}:`, e)
@@ -97,7 +97,7 @@ const ClientData:FC = ()=>{
             />        
             
             <Container>    
-                <h1>User Profile</h1>            
+                <h1 style={{textAlign:'center'}}>User Profile</h1>            
                 <hr style={{ width: '100%', marginBottom: '15px', backgroundColor: '#e2e8f0', border: 'none', height: '1px' }} />
                 
                 {user && (

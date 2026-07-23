@@ -52,10 +52,10 @@ const Profile: FC = () => {
   const fetchRestaurantProfile = useCallback(async () => {
     try {
       setIsLoading(true);
-      const restaurantRes = await axios.get<Restaurant>(`${BASE_URL}/restaurant`, requestConfig);
+      const restaurantRes = await axios.get<Restaurant>(`${BASE_URL}/restaurants`, requestConfig);
       setMenu(restaurantRes.data);
 
-      const productsRes = await axios.get<Products[]>(`${BASE_URL}/restaurant_products`, requestConfig);
+      const productsRes = await axios.get<Products[]>(`${BASE_URL}/restaurants/products`, requestConfig);
       setProducts(productsRes.data);
     } catch (error: any) {
       console.error("Failed to fetch restaurant profile datasets:", error.response?.data || error.message);
@@ -111,15 +111,15 @@ const Profile: FC = () => {
 
   // 🗑️ Delete Product Flow
   const handleDeleteProduct = async (product: Products) => {
-    const confirmDelete = window.confirm(`Tem certeza que deseja excluir "${product.name}" do seu cardápio?`);
+    const confirmDelete = window.confirm(`Are you sure you want to remove "${product.name}" from your menu?`);
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`${BASE_URL}/product/${product.id}`, requestConfig);
+      await axios.delete(`${BASE_URL}/restaurants/product/${product.id}`, requestConfig);
       await fetchRestaurantProfile();
     } catch (error: any) {
       console.error("Product deletion stream failed:", error.response?.data || error.message);
-      alert("Não foi possível excluir o produto. Tente novamente.");
+      alert("It was not possible to remove the product from your menu.");
     }
   };
 
@@ -240,14 +240,14 @@ const Profile: FC = () => {
                           setScreen('update');
                         }}
                       >
-                        Editar
+                        Edit
                       </button>
                       <button 
                         type="button"
                         className="remove-btn"
                         onClick={() => handleDeleteProduct(product)}
                       >
-                        Remover
+                        Remove
                       </button>
                     </div>                                 
                   </div>
