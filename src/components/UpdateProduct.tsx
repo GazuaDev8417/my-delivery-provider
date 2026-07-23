@@ -124,9 +124,8 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
         name: res.data.name || '',
         price: String(res.data.price || '')
       });
-    } catch (error: any) {
-      console.error("Failed to fetch product values from service database:", error);
-      alert("An error occurred while loading products details.");
+    } catch (e: any) {
+      console.error(e?.response?.data?.message || e?.response?.data || e)
       setScreen('list');
     } finally {
       setIsUiLoading(false);

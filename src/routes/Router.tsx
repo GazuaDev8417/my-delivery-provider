@@ -7,7 +7,8 @@ import { useGlobal } from '../hooks/useGlobal'
 const Login = lazy(() => import('../pages/login/Login'))
 const Orders = lazy(() => import('../pages/orders/Orders'))
 const ClientData = lazy(() => import('../pages/clientData/ClientData'))
-const Profile = lazy(() => import('../pages/profile/Profile'))
+const Home = lazy(() => import('../pages/home/Home'))
+const Profile = lazy(() => import ('../pages/profile/Profile'))
 
 const ProtectedRoute: FC = () => {
   const { providerToken, loading } = useGlobal()
@@ -43,6 +44,7 @@ const Router: FC = () => {
         <Route element={<ProtectedRoute />}>
           <Route path={ProviderRoutes.ORDERS} element={<Orders />} />
           <Route path={ProviderRoutes.CLIENT_DATA} element={<ClientData />} />
+          <Route path={ProviderRoutes.HOME} element={<Home />} />
           <Route path={ProviderRoutes.PROFILE} element={<Profile />} />
         </Route>
 

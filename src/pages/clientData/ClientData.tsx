@@ -42,8 +42,8 @@ const ClientData:FC = ()=>{
 
             setUser(profileRes.data)
             setOrders(historyRes.data)
-        }catch(e){
-            console.error("Error orchestrating customer dashboard dataset:", e)
+        }catch(e:any){
+            console.error(e?.response?.data?.message || e?.response?.data || e)
         }finally{
             setIsUiLoading(false)
         }
@@ -69,8 +69,8 @@ const ClientData:FC = ()=>{
 
             const refreshOrders = await axios.get<Order[]>(`${BASE_URL}/orders/user/${userId}`, requestConfig)
             setOrders(refreshOrders.data)
-        }catch(e){
-            console.error(`Failed to execute state transition to ${targetState}:`, e)
+        }catch(e:any){
+            console.error(e?.response?.data?.message || e?.response?.data || e)
         }finally{
             setIsMutating(false)
         }

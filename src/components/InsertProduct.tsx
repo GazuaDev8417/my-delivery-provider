@@ -220,7 +220,6 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
             accept="image/*"
             onChange={handleFileChange}
             disabled={isSubmitting}
-            required
           />
         </div>
 

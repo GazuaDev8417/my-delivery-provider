@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, type FC } from "react"
 import { useNavigate } from "react-router-dom"
-import { BsFillPersonFill } from "react-icons/bs"
+import { IoMdHome } from "react-icons/io";
 import axios from "axios"
 import { BASE_URL } from "../../constants/url"
 import Header from "../../components/Header"
@@ -41,8 +41,8 @@ const Orders:FC = ()=>{
             if(ordersRes.data.length > 0 && !openState){
                 setOpenState(ordersRes.data[0].state)
             }
-        }catch(e){
-            console.error('Error orchestrating concurrent dashboard streams:', e)
+        }catch(e:any){
+            console.error(e?.response?.data?.message || e?.response?.data || e)
         }finally{
             setIsUiLoading(false)
         }
@@ -62,7 +62,7 @@ const Orders:FC = ()=>{
             await axios.delete(`${BASE_URL}/orders/${order.id}`, requestConfig)
             await fetchDashboardData()
         }catch(e:any){
-            console.error('Failed to eliminate specified order path:', e?.response?.data || e.message)
+            console.error(e?.response?.data?.message || e?.response?.data || e)
         }
     }
 
@@ -100,9 +100,9 @@ const Orders:FC = ()=>{
         <>
             <Header
                 rightIcon={
-                <BsFillPersonFill 
+                <IoMdHome 
                     className="header-icon" 
-                    onClick={() => navigate(ProviderRoutes.PROFILE)} 
+                    onClick={() => navigate(ProviderRoutes.HOME)} 
                     style={{ cursor: 'pointer' }}
                 />
                 }
