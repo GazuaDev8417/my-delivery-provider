@@ -68,11 +68,11 @@ The operational epicenter for restaurant staff.
 
 Provides targeted order and address visibility for individual client fulfillments.
 
-    Concurrent Data Fetching: Simultaneously executes calls to /profile/:id and /user/active_orders/:id via Promise.all.
+    Concurrent Data Fetching: Simultaneously executes calls to /profile/:id and /orders/user/:id via Promise.all.
 
     Guard Logic: Redirects safely to /orders if no active userId reference exists in web storage.
 
-    State Machine Mutations: Handles status patches (/finish_order/:id and /return_order/:id) with button lockouts to prevent duplicate network calls.
+    State Machine Mutations: Handles status patches (/orders/:id/finish and /orders/:id/revert) with button lockouts to prevent duplicate network calls.
 
 ### 4. Merchant Profile & Menu Manager (Profile.tsx)
 
@@ -96,4 +96,5 @@ Allows full administration of the restaurant profile and menu catalog.
 
 Developed by **Flamarion França** \
 Portolio page: https://portfolio-vtu0.onrender.com \
-Application link: https://my-delivery-provider.vercel.app
+Application link: https://my-delivery-provider.vercel.app \
+The Customer-Facing application link: https://my-delivery-omega.vercel.app
