@@ -7,6 +7,7 @@ import { Container } from "./styled"
 import { BASE_URL } from "../../constants/url";
 import { useGlobal } from "../../hooks/useGlobal";
 import { ProviderRoutes } from "../../routes/paths";
+import RequestPasswordReset from "../../components/resetPassword/RequestPasswordReset";
 
 
 
@@ -21,6 +22,7 @@ const Login:FC = ()=>{
     const navigate = useNavigate();
     const { providerToken, loading, loginProvider } = useGlobal();    
     const [showPass, setShowPass] = useState<boolean>(false);
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const [form, setForm] = useState<FormData>({
         email: 'disk90@email.com',
         password: '123456'
@@ -76,8 +78,8 @@ const Login:FC = ()=>{
 
     return(
         <Container>
-            <div className="title">Login</div>
-            
+            <RequestPasswordReset isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <div className="title">Login</div>            
             <form onSubmit={handleFormSubmit}>
                 <div className="input-icon-container">
                 <label htmlFor="login-email" className="sr-only">Email</label>
@@ -138,6 +140,9 @@ const Login:FC = ()=>{
                 </button>
                 </div>
             </form>
+            <p 
+                style={{cursor:'pointer', color:'blue '}}
+                onClick={() => setIsModalOpen(true)}>Forgot my password</p>
         </Container>
     )
 

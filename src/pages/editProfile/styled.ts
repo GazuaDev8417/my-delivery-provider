@@ -24,6 +24,14 @@ export const Container = styled.div`
         text-align: center;
     }
 
+    .obs-container{
+        background: gray;
+        margin: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        color: whitesmoke;
+    }
+
     form {
         display: flex;
         flex-direction: column;

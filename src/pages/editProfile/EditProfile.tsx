@@ -12,7 +12,6 @@ import { Container } from "./styled"
 
 interface FormData {
     name: string
-    email: string
     phone: string
     address:string
 }
@@ -24,7 +23,6 @@ const EditProfile:FC = ()=>{
     const { user, getProfile } = useGlobal()
     const [form, setForm] = useState<FormData>({
         name: '',
-        email: '',
         phone: '',
         address:''
     })
@@ -39,7 +37,6 @@ const EditProfile:FC = ()=>{
         if (user && user.name) {
             setForm({
                 name: user.name,
-                email: user.email,
                 phone: user.phone,
                 address: user.address
             })
@@ -60,7 +57,6 @@ const EditProfile:FC = ()=>{
 
         const body = {
             name: form.name,
-            email: form.email,
             phone: form.phone.replace(/\D/g, ''),
             address: form.address,
         }
@@ -83,7 +79,6 @@ const EditProfile:FC = ()=>{
     const clearForm = (): void => {
         setForm({
             name: '',
-            email: '',
             phone: '',
             address: ''
         })
@@ -94,6 +89,9 @@ const EditProfile:FC = ()=>{
     return(
         <Container>
             <div className="title">Update Restaurant Data</div>
+            <small className="obs-container">
+                You won't can change the email <br /> because it's a credential to access the application.
+            </small>
             <form onSubmit={updateRestaurant}>
                 <label htmlFor="name" className="sr-only">Full Name</label>
                 <input
@@ -106,20 +104,6 @@ const EditProfile:FC = ()=>{
                     placeholder="First and last name" 
                     autoComplete="name"
                     aria-label="User Full Name"
-                    required
-                />
-
-                <label htmlFor="email" className="sr-only">E-mail</label>
-                <input
-                    id="email"
-                    type="email"
-                    className="form-input"
-                    name="email"
-                    value={form.email}
-                    onChange={onChange}
-                    placeholder="name@email.com" 
-                    autoComplete="email"
-                    aria-label="Email address"
                     required
                 />
 

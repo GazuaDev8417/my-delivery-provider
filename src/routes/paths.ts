@@ -6,4 +6,5 @@ export const ProviderRoutes = {
   PROFILE: '/profile',
   EDIT_PROFILE: '/edit-profile',
   ADDRESS: '/edit-address',
+  RESET_PASSWORD: '/reset-request'
 } as const
