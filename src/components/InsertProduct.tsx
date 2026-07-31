@@ -16,10 +16,11 @@ interface ProductFormData {
   category: string;
   description: string;
   name: string;
-  price: string; // Used string internally for cleaner form typing/reset operations
+  price: string;
+  stock: number
 }
 
-// 🎨 Polished Modern CSS Interface Layer
+
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -102,7 +103,8 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
     category: '',
     description: '',
     name: '',
-    price: ''
+    price: '',
+    stock: 0
   });
 
   // Handle textual changes securely
@@ -131,7 +133,8 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
       category: '',
       description: '',
       name: '',
-      price: ''
+      price: '',
+      stock: 0
     });
     setImage(null);
   };
@@ -147,6 +150,7 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
     formData.append('description', form.description.trim());
     formData.append('name', form.name.trim());
     formData.append('price', String(form.price));
+    formData.append('stock', form.price);
 
     if (image) {
       formData.append('image', image);
@@ -231,6 +235,18 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
           value={form.price}
           onChange={handleInputChange}
           placeholder="Price (R$ 0.00)"
+          disabled={isSubmitting}
+          required
+        />
+
+        <input
+          type="text"
+          className="form-input"
+          onKeyPress={handlePriceKeyPress}
+          name="stock"
+          value={form.stock}
+          onChange={handleInputChange}
+          placeholder="Stock"
           disabled={isSubmitting}
           required
         />

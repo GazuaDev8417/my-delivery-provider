@@ -28,9 +28,7 @@ type Screen = 'list' | 'insert' | 'update';
 const Home: FC = () => {
   const navigate = useNavigate();
   const { providerToken, getProfile, user } = useGlobal();
-  const productsRef = useRef<HTMLDivElement | null>(null);
-
-  // Core UI states
+  const productsRef = useRef<HTMLDivElement | null>(null)
   const [searchWord, setSearchWord] = useState<string>('');
   const [products, setProducts] = useState<Products[]>([]);
   const [screen, setScreen] = useState<Screen>('list');
@@ -45,8 +43,8 @@ const Home: FC = () => {
   const requestConfig = useMemo(() => ({
     headers: { Authorization: providerToken || '' }
   }), [providerToken]);
-
-  // 🔄 Fetch and Synchronize Restaurant Profile Data
+  
+  
   const fetchRestaurantProfile = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -61,21 +59,21 @@ const Home: FC = () => {
     }
   }, [requestConfig]);
 
-  // Sync initial dataset and run updates when returning to the catalog overview list view
+
   useEffect(() => {
     if (screen === 'list') {
       fetchRestaurantProfile();
     }
   }, [screen, fetchRestaurantProfile]);
 
-  // 📜 Autoscroll helper when selecting categories
+
   useEffect(() => {
     if (openCategory && productsRef.current) {
       productsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [openCategory]);
 
-  // 🗂️ Optimally group products by category using useMemo to prevent re-calculations during live text searches
+
   const groupedProducts = useMemo(() => {
     const grouped = products.reduce((acc, product) => {
       const categoryKey = product.category.trim();
@@ -96,7 +94,7 @@ const Home: FC = () => {
     return results;
   }, [products, openCategory]);
 
-  // 🔍 Interactive Catalog Live Filter
+
   const filteredCategoryItems = useMemo(() => {
     const activeGroup = groupedProducts.find(g => g.category === openCategory);
     if (!activeGroup) return [];
@@ -106,7 +104,7 @@ const Home: FC = () => {
     );
   }, [groupedProducts, openCategory, searchWord]);
 
-  // 🗑️ Delete Product Flow
+  
   const handleDeleteProduct = async (product: Products) => {
     const confirmDelete = window.confirm(`Are you sure you want to remove "${product.name}" from your menu?`);
     if (!confirmDelete) return;

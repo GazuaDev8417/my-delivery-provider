@@ -30,7 +30,7 @@ const Profile = ()=>{
             navigate(ProviderRoutes.LOGIN);
         }
     }
-console.log(user)
+
 
     return(
         <>
