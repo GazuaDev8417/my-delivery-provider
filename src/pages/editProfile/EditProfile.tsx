@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { useGlobal } from "../../hooks/useGlobal"
 import { handleKeyPress } from "../../utils/inputsAndKeys"
-import { BASE_URL } from "../../constants/url"
 import { Container } from "./styled"
 
 
@@ -15,6 +14,9 @@ interface FormData {
     phone: string
     address:string
 }
+
+
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 

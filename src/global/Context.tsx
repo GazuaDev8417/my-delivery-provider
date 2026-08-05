@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect, type ReactNode, type FC } from "react"
 import axios from "axios"
-import { BASE_URL } from "../constants/url"
 import type { Restaurant } from "../types/types"
 
 
@@ -20,6 +19,10 @@ export const GlobalStateContext = createContext<GlobalStateContextType | undefin
 interface GlobalStateProviderProps {
   children: ReactNode
 }
+
+
+const BASE_URL = import.meta.env.VITE_BASE_URL
+
 
 
 export const GlobalStateProvider:FC<GlobalStateProviderProps> = ({ children })=>{

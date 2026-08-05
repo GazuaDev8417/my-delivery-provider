@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 import { Container } from "./styled"
-import { BASE_URL } from "../../constants/url";
 import { useGlobal } from "../../hooks/useGlobal";
 import { ProviderRoutes } from "../../routes/paths";
 import RequestPasswordReset from "../../components/resetPassword/RequestPasswordReset";
@@ -16,6 +15,8 @@ interface FormData{
     password:string
 }
 
+
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 const Login:FC = ()=>{

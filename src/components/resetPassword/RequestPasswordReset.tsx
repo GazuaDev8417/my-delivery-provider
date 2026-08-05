@@ -1,7 +1,6 @@
 import type { SyntheticEvent, SubmitEvent } from "react"
 import { useEffect, useRef } from "react"
 import axios from 'axios'
-import { BASE_URL } from "../../constants/url"
 import { userForm } from "../../hooks/useForm"
 import { StyledDialog, ModalContent, CloseButton } from "./styled"
 
@@ -11,7 +10,7 @@ interface ModalProps{
     onClose: () => void
 }
 
-
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 const RequestPasswordReset = ({ isOpen, onClose }:ModalProps)=>{

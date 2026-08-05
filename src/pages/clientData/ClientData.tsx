@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { MdFeed } from "react-icons/md"
 import axios from 'axios'
 import { Container } from './styled'
-import { BASE_URL } from '../../constants/url'
 import Header from "../../components/Header"
 import type { Order, User } from '../../types/types'
 import { useGlobal } from '../../hooks/useGlobal'
 import { ProviderRoutes } from '../../routes/paths'
 
+
+
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 const ClientData:FC = ()=>{

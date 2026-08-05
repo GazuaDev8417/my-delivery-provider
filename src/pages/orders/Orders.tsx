@@ -2,7 +2,6 @@ import { useEffect, useState, useMemo, type FC } from "react"
 import { useNavigate } from "react-router-dom"
 import { IoMdHome } from "react-icons/io";
 import axios from "axios"
-import { BASE_URL } from "../../constants/url"
 import Header from "../../components/Header"
 import { useGlobal } from "../../hooks/useGlobal"
 import { ProviderRoutes } from "../../routes/paths"
@@ -10,6 +9,7 @@ import type { Order, GroupedProducts } from "../../types/types"
 import { Container } from "./styled"
 
 
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 const Orders:FC = ()=>{

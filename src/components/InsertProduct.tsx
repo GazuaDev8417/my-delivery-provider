@@ -1,8 +1,6 @@
 import { type ChangeEvent, type SubmitEvent, useState, type FC } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-
-import { BASE_URL } from '../constants/url';
 import { useGlobal } from '../hooks/useGlobal';
 
 // 📋 Type Definitions
@@ -93,10 +91,13 @@ const Container = styled.div`
   }
 `;
 
+
+const BASE_URL = import.meta.env.VITE_BASE_URL
+
+
+
 const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
-  const { providerToken } = useGlobal();
-  
-  // Component States
+  const { providerToken } = useGlobal()
   const [image, setImage] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [form, setForm] = useState<ProductFormData>({

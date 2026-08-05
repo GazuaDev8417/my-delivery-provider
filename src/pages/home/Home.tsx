@@ -5,7 +5,6 @@ import { MdFeed } from "react-icons/md";
 import { BsFillPersonFill } from "react-icons/bs"
 import { IoMdAddCircle, IoMdCloseCircle } from "react-icons/io";
 import { Container } from './styled';
-import { BASE_URL } from "../../constants/url";
 import Header from "../../components/Header";
 import InsertProduct from "../../components/InsertProduct";
 import UpdateProduct from "../../components/UpdateProduct";
@@ -23,6 +22,8 @@ type GroupedProducts = {
 
 type Screen = 'list' | 'insert' | 'update';
 
+
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 const Home: FC = () => {

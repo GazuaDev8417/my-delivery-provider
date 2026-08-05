@@ -1,8 +1,6 @@
 import React, { type ChangeEvent, type SubmitEvent, useState, useEffect, type FC, useMemo, useCallback } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-
-import { BASE_URL } from '../constants/url';
 import { useGlobal } from '../hooks/useGlobal';
 
 // 📋 Type Definitions
@@ -18,9 +16,10 @@ interface ProductFormData {
   description: string;
   name: string;
   price: string;
+  stock: number;
 }
 
-// 🎨 Polished Modern CSS Interface Layer (Matches InsertProduct)
+
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -93,6 +92,10 @@ const Container = styled.div`
   }
 `;
 
+
+const BASE_URL = import.meta.env.VITE_BASE_URL
+
+
 const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
   const { providerToken } = useGlobal();
   
@@ -104,7 +107,8 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
     category: '',
     description: '',
     name: '',
-    price: ''
+    price: '',
+    stock:0
   });
   
 
@@ -122,7 +126,8 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
         category: res.data.category || '',
         description: res.data.description || '',
         name: res.data.name || '',
-        price: String(res.data.price || '')
+        price: String(res.data.price || ''),
+        stock: String(res.data.stock || '')
       });
     } catch (e: any) {
       console.error(e?.response?.data?.message || e?.response?.data || e)
@@ -162,7 +167,8 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
       category: '',
       description: '',
       name: '',
-      price: ''
+      price: '',
+      stock:0
     });
     setImage(null);
   };
@@ -177,6 +183,7 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
     formData.append('description', form.description.trim());
     formData.append('name', form.name.trim());
     formData.append('price', String(form.price));
+    formData.append('stock', String(form.stock));
 
     if (image) {
       formData.append('image', image);
@@ -265,6 +272,18 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
           value={form.price}
           onChange={handleInputChange}
           placeholder="Preço (R$ 0.00)"
+          disabled={isSubmitting}
+          required
+        />
+
+        <input
+          type="text"
+          className="form-input"
+          onKeyPress={handlePriceKeyPress}
+          name="stock"
+          value={form.stock}
+          onChange={handleInputChange}
+          placeholder="Stock"
           disabled={isSubmitting}
           required
         />
