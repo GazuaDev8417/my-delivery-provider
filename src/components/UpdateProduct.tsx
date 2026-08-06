@@ -16,7 +16,7 @@ interface ProductFormData {
   description: string;
   name: string;
   price: string;
-  stock: number;
+  stock: string;
 }
 
 
@@ -108,7 +108,7 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
     description: '',
     name: '',
     price: '',
-    stock:0
+    stock:''
   });
   
 
@@ -168,7 +168,7 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
       description: '',
       name: '',
       price: '',
-      stock:0
+      stock:''
     });
     setImage(null);
   };
@@ -189,6 +189,11 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
       formData.append('image', image);
     }
 
+    if(Number(form.stock) === 0){
+      const decide = window.confirm('Once the stock is depleted, the product will no longer be visible in the client plataform')
+      if(!decide) return
+    }
+
     try {
       setIsSubmitting(true);
       
@@ -199,10 +204,9 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
         }
       });
 
-      // Navigate back to the visual layout menu tree list matching profile components
+      
       setScreen('list');
     } catch (error: any) {
-      console.error("Failed to commit item updates onto database:", error);
       alert(
         error?.response?.data?.message || 
         error?.response?.data ||

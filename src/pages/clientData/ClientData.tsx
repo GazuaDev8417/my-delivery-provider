@@ -143,7 +143,7 @@ const ClientData:FC = ()=>{
                             <div className="rest-name">
                             {order.product} — R$ {Number(order.price).toFixed(2)}
                             </div>
-                            <b>Order place on:</b> {order.moment} <br/>
+                            <b>Order place on:</b> {new Date(order.moment).toLocaleString()} <br/>
                             <b>Quantity:</b> {order.quantity}<br/>
                             <b>Total:</b> R$ {Number(order.total).toFixed(2)}<br/>
                             <b>Status:</b> {order.state === 'FINISHED' ? 'Completed' : 'Pending'} <br />

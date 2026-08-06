@@ -141,7 +141,7 @@ const Orders:FC = ()=>{
                                     <div className="card-content">
                                         <div className="rest-name">{order.product}</div>
                                         R$ {Number(order.price).toFixed(2)} <br />
-                                        <b>Order placed on:</b> {order.moment} <br />
+                                        <b>Order placed on:</b> {new Date(order.moment).toLocaleString()} <br />
                                         <b>Quantity:</b> {order.quantity} <br />
                                         <b>Total:</b> {Number(order.total).toFixed(2)} <br />
                                         <b>Address:</b> {order.address} <br />

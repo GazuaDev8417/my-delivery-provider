@@ -15,7 +15,7 @@ interface ProductFormData {
   description: string;
   name: string;
   price: string;
-  stock: number
+  stock: string
 }
 
 
@@ -105,10 +105,10 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
     description: '',
     name: '',
     price: '',
-    stock: 0
+    stock: ''
   });
 
-  // Handle textual changes securely
+  
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
@@ -121,21 +121,21 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
     }
   };
 
-  // Track dynamic canvas image allocations
+  
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setImage(e.target.files[0]);
     }
   };
 
-  // Reset form states completely 
+  
   const handleClearForm = (): void => {
     setForm({
       category: '',
       description: '',
       name: '',
       price: '',
-      stock: 0
+      stock: ''
     });
     setImage(null);
   };
@@ -151,7 +151,7 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
     formData.append('description', form.description.trim());
     formData.append('name', form.name.trim());
     formData.append('price', String(form.price));
-    formData.append('stock', form.price);
+    formData.append('stock', String(form.stock));
 
     if (image) {
       formData.append('image', image);

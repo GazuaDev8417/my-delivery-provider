@@ -35,7 +35,7 @@ export interface Order {
   id: string;
   product: string;
   price: string;
-  moment: string;
+  moment: Date;
   quantity: number;
   total: string;
   address: string;
