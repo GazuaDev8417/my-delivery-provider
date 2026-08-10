@@ -212,7 +212,7 @@ const Home: FC = () => {
                   <div className="products-card" key={product.id}>
                     <img
                       className="product-image" 
-                      src={product.photoUrl}
+                      src={`/imgs/products/${product.photoUrl}`}
                       alt={product.name}
                     />
                     <div className="product-desc">

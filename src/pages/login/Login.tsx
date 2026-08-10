@@ -141,9 +141,9 @@ const Login:FC = ()=>{
                 </button>
                 </div>
             </form>
-            <p 
+            {/* <p 
                 style={{cursor:'pointer', color:'blue '}}
-                onClick={() => setIsModalOpen(true)}>Forgot my password</p>
+                onClick={() => setIsModalOpen(true)}>Forgot my password</p> */}
         </Container>
     )
 

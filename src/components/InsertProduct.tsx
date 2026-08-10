@@ -165,9 +165,8 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
           Authorization: providerToken || '',
           'Content-Type': 'multipart/form-data'
         }
-      });
+      })
 
-      // Jump back cleanly to the catalog overview board
       setScreen('list');
     } catch (error: any) {
       console.error("Failed to commit item onto menu database tree:", error);

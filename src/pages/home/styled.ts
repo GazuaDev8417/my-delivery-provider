@@ -168,6 +168,8 @@ export const Container = styled.div`
     object-fit: cover;
     border-radius: 8px;
     flex-shrink: 0;
+    object-position: center;
+    object-fit: cover;
 
     @media (max-width: 640px) {
       width: 100%;
