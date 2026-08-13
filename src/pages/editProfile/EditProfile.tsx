@@ -69,7 +69,7 @@ const EditProfile:FC = ()=>{
         
         try {
             await axios.put(`${BASE_URL}/restaurants/update`, body, config)
-            alert("Restaurant data updated successfully!")
+            alert("Provider updated successfully!")
             navigate('/profile')
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || error.response?.data || "An unexpected error occurred."
@@ -90,7 +90,7 @@ const EditProfile:FC = ()=>{
 
     return(
         <Container>
-            <div className="title">Update Restaurant Data</div>
+            <div className="title">Update Provider Data</div>
             <small className="obs-container">
                 You won't can change the email <br /> because it's a credential to access the application.
             </small>

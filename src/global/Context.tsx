@@ -70,7 +70,10 @@ export const GlobalStateProvider:FC<GlobalStateProviderProps> = ({ children })=>
 
     const logoutProvider = ()=>{
         localStorage.clear()
+        
         setProviderToken(null)
+        setNotifications([])
+        setUser(null)
     }
 
 

@@ -35,11 +35,13 @@ export default function NotificationMenu(){
     const menuRef = useRef<HTMLDivElement>(null)
     const [open, setOpen] = useState<boolean>(false)
     
-    
+
 
 
     useEffect(()=>{
         async function loadNotifications(){
+            setNotifications([])
+
             try{
                 const data = await notifificationService.getNofifications()
                 setNotifications(data)
@@ -47,7 +49,7 @@ export default function NotificationMenu(){
                 console.error(e?.response?.data?.message || e?.response?.data || e?.message)
             }
         }
-        loadNotifications()
+        loadNotifications
     }, [])
 
 

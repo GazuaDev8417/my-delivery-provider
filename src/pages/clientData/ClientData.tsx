@@ -99,7 +99,7 @@ const ClientData:FC = ()=>{
             />        
             
             <Container>    
-                <h1 style={{textAlign:'center'}}>User Profile</h1>            
+                <h1 style={{textAlign:'center'}}>Customer Profile</h1>            
                 <hr style={{ width: '100%', marginBottom: '15px', backgroundColor: '#e2e8f0', border: 'none', height: '1px' }} />
                 
                 {user && (

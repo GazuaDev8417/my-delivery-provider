@@ -39,7 +39,7 @@ const Profile = ()=>{
                 rightIcon={ <AiOutlineLogout className="header-icon" onClick={handleLogout} /> }
             />
             <Container>
-                <h1>Restaurant Data</h1>
+                <h1>Provider Data</h1>
                 <hr style={{ width: '100%', marginBottom: '15px', backgroundColor: 'lightgray', border: 'none', height: '1px' }} />
 
                 <div className="user-section">
