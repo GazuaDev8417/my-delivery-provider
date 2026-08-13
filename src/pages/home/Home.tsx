@@ -162,7 +162,7 @@ const Home: FC = () => {
           <div className="menuTitle-container">
             <div/>
             <div className="products">
-              {screen === 'list' && 'Menu'}
+              {screen === 'list' && 'List of Products'}
               {screen === 'insert' && 'Add New Product'}
               {screen === 'update' && 'Update Product'}
             </div>

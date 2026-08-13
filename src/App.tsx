@@ -94,7 +94,7 @@ const GlobalStyle = createGlobalStyle`
 
   /* ⚡ Shared Global Utility Icons & Actions */
   .header-icon {
-    font-size: 2rem;
+    font-size: 1.5rem;
     cursor: pointer;
     color: #64748b;
     transition: color 0.2s ease-in-out, transform 0.1s;

@@ -1,6 +1,7 @@
-import { createContext, useState, useEffect, type ReactNode, type FC } from "react"
+import { createContext, useState, useEffect, type ReactNode, type FC, type Dispatch, type SetStateAction } from "react"
 import axios from "axios"
 import type { Restaurant } from "../types/types"
+import type { ProviderNotifications } from "../services/notifications"
 
 
 
@@ -11,6 +12,8 @@ interface GlobalStateContextType {
   logoutProvider: () => void
   user: Restaurant | null  
   getProfile: () => void
+  notifications:ProviderNotifications[]
+  setNotifications:Dispatch<SetStateAction<ProviderNotifications[]>>
 }
 
 
@@ -29,6 +32,7 @@ export const GlobalStateProvider:FC<GlobalStateProviderProps> = ({ children })=>
     const [providerToken, setProviderToken] = useState<string | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [user, setUser] = useState<Restaurant | null>(null)
+    const [notifications, setNotifications]  = useState<ProviderNotifications[]>([])
 
 
 
@@ -72,7 +76,11 @@ export const GlobalStateProvider:FC<GlobalStateProviderProps> = ({ children })=>
 
 
     return(
-        <GlobalStateContext.Provider value={{ providerToken, loading, loginProvider, logoutProvider, getProfile, user }}>
+        <GlobalStateContext.Provider value={{
+            providerToken, loading, loginProvider, 
+            logoutProvider, getProfile, user,
+            notifications, setNotifications
+        }}>
             {children}
         </GlobalStateContext.Provider>
     )

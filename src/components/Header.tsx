@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import NotificationMenu from './notificationMenu/NofificationMenu'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -25,7 +26,10 @@ const Header = (props:HeaderProps)=>{
     return(
         <Container>
             {props.leftIcon}
-            {props.rightIcon}
+            <div style={{ display:'flex', alignItems:'center', gap:20}}>
+                <NotificationMenu/>
+                {props.rightIcon}
+            </div>
         </Container>
     )
 }

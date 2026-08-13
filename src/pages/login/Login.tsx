@@ -25,7 +25,7 @@ const Login:FC = ()=>{
     const [showPass, setShowPass] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [form, setForm] = useState<FormData>({
-        email: 'admin@example.com',
+        email: 'admin1@example.com',
         password: 'password123'
     });
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
