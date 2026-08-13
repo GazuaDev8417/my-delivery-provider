@@ -31,7 +31,7 @@ const VITE_RESTAURANT_NOTIFICATION_URL = import.meta.env.VITE_RESTAURANT_NOTIFIC
 
 
 export default function NotificationMenu(){
-    const { user, notifications, setNotifications } = useGlobal()
+    const { notifications, setNotifications } = useGlobal()
     const menuRef = useRef<HTMLDivElement>(null)
     const [open, setOpen] = useState<boolean>(false)
     
@@ -39,19 +39,15 @@ export default function NotificationMenu(){
 
 
     useEffect(()=>{
-        if(user?.id){
-            async function loadNotifications(){
-                try{
-                    const data = await notifificationService.getNofifications()
-                    setNotifications(data)
-                }catch(e:any){
-                    console.error(e?.response?.data?.message || e?.response?.data || e?.message)
-                }
+        async function loadNotifications(){
+            try{
+                const data = await notifificationService.getNofifications()
+                setNotifications(data)
+            }catch(e:any){
+                console.error(e?.response?.data?.message || e?.response?.data || e?.message)
             }
-            loadNotifications()
-        }else{
-            setNotifications([])
         }
+        loadNotifications()
     }, [])
 
 
@@ -95,7 +91,7 @@ export default function NotificationMenu(){
             )
 
             if(message.startsWith('An order for') ||  message.startsWith('New order placed')){
-                window.open(VITE_RESTAURANT_NOTIFICATION_URL, '_blank')
+                window.location.assign(VITE_RESTAURANT_NOTIFICATION_URL)
             }
         }catch(e:any){
             console.error(e?.response?.data?.message || e?.response?.data || e?.message)

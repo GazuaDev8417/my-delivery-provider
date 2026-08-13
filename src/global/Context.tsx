@@ -69,7 +69,7 @@ export const GlobalStateProvider:FC<GlobalStateProviderProps> = ({ children })=>
 
 
     const logoutProvider = ()=>{
-        localStorage.removeItem('@MyDeliveryProvider:token')
+        localStorage.clear()
         setProviderToken(null)
     }
 

@@ -55,6 +55,8 @@ export const PopoverMenu = styled.div<{ $open: boolean }>`
     `}
 /* Some classes inside popover menu */
     .notification-item-container {
+        max-height: 300px;
+        overflow: auto;
         cursor: pointer;
         border-top: 1px solid #e5e7eb;
     }

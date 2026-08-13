@@ -11,26 +11,26 @@ export interface ProviderNotifications{
 }
 
 
-const token = localStorage.getItem('token')
+const token = localStorage.getItem('@MyDeliveryProvider:token')
 
 export const notifificationService = {
     //YOU NEED TO BUILD THE ROUTES HERE IN EVERY REQUEST
     getNofifications: async():Promise<ProviderNotifications[]>=>{
-        const response = await axios.get<ProviderNotifications[]>(`${BASE_URL}/customers-notifications`, {
+        const response = await axios.get<ProviderNotifications[]>(`${BASE_URL}/provider-notifications`, {
             headers: { Authorization: token }
         })
         return response.data
     },
 
     updateNotification: async(id:string):Promise<void>=>{
-        const response = await axios.put(`${BASE_URL}/customers-notifications/update/${id}`, {}, {
+        const response = await axios.put(`${BASE_URL}/provider-notifications/update/${id}`, {}, {
             headers: { Authorization: token }
         })
         return response.data
     },
 
     updateAllNotifications: async():Promise<void>=>{
-        const response = await axios.put(`${BASE_URL}/customers-notifications/update/all`, {}, {
+        const response = await axios.put(`${BASE_URL}/provider-notifications/update/all`, {}, {
             headers: { Authorization: token }
         })
         return response.data
