@@ -163,6 +163,8 @@ export const Container = styled.div`
   }
 
   .product-image { 
+    width: 90px;
+    height: 90px;
     object-fit: cover;
     border-radius: 8px;
     flex-shrink: 0;
