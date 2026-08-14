@@ -58,7 +58,7 @@ const Login:FC = ()=>{
         try{
             setIsSubmitting(true)
 
-            const response = await axios.post(`${BASE_URL}/restaurants/login`, {
+            const response = await axios.post(`${BASE_URL}/providers/login`, {
                 email: form.email,
                 password: form.password
             })

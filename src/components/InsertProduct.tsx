@@ -160,7 +160,7 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
     try {
       setIsSubmitting(true);
       
-      await axios.post(`${BASE_URL}/restaurants/product`, formData, {
+      await axios.post(`${BASE_URL}/providers/product`, formData, {
         headers: {
           Authorization: providerToken || '',
           'Content-Type': 'multipart/form-data'

@@ -55,7 +55,7 @@ export const GlobalStateProvider:FC<GlobalStateProviderProps> = ({ children })=>
 
 
     const getProfile = ()=>{
-        axios.get(`${BASE_URL}/restaurants/profile`, {
+        axios.get(`${BASE_URL}/providers/profile`, {
             headers: { Authorization: providerToken }
         }).then(res => setUser(res.data))
         .catch(e => console.error('Failed to load restaurant: ', e))

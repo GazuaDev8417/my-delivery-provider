@@ -40,7 +40,7 @@ const ResetPassword:FC = ()=>{
         }
 
         try{
-            const response = await axios.patch(`${BASE_URL}/restaurants/password/update`, body, {
+            const response = await axios.patch(`${BASE_URL}/providers/password/update`, body, {
                 headers: { Authorization: token }
             })
 

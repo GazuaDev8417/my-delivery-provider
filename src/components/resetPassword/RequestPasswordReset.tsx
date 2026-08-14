@@ -62,7 +62,7 @@ const RequestPasswordReset = ({ isOpen, onClose }:ModalProps)=>{
 
         try{
             
-            const response = await axios.post(`${BASE_URL}/restaurants/password/reset-request`, { email: form.email })
+            const response = await axios.post(`${BASE_URL}/providers/password/reset-request`, { email: form.email })
             const responseData = response.data
 
             if(isUrl(responseData)){

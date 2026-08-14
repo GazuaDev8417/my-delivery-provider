@@ -120,7 +120,7 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
   const loadProductDetails = useCallback(async () => {
     try {
       setIsUiLoading(true);
-      const res = await axios.get(`${BASE_URL}/restaurants/product/${product}`, requestConfig);
+      const res = await axios.get(`${BASE_URL}/providers/product/${product}`, requestConfig);
       
       setForm({
         category: res.data.category || '',
@@ -197,7 +197,7 @@ const UpdateProduct: FC<UpdateProductProps> = ({ product, setScreen }) => {
     try {
       setIsSubmitting(true);
       
-      await axios.put(`${BASE_URL}/restaurants/product/${product}`, formData, {
+      await axios.put(`${BASE_URL}/providers/product/${product}`, formData, {
         headers: {
           Authorization: providerToken || '',
           'Content-Type': 'multipart/form-data'

@@ -51,7 +51,7 @@ const Home: FC = () => {
       setIsLoading(true);
       getProfile()
 
-      const productsRes = await axios.get<Products[]>(`${BASE_URL}/restaurants/products`, requestConfig);
+      const productsRes = await axios.get<Products[]>(`${BASE_URL}/providers/products`, requestConfig);
       setProducts(productsRes.data);
     } catch (e: any) {
       console.error(e?.response?.data?.message || e?.response?.data || e)
@@ -111,7 +111,7 @@ const Home: FC = () => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`${BASE_URL}/restaurants/product/${product.id}`, requestConfig);
+      await axios.delete(`${BASE_URL}/providers/product/${product.id}`, requestConfig);
       await fetchRestaurantProfile();
     } catch (e: any) {
       console.error(e?.response?.data?.message || e?.response?.data || e)

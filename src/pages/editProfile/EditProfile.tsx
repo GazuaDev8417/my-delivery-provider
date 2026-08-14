@@ -68,7 +68,7 @@ const EditProfile:FC = ()=>{
         }
         
         try {
-            await axios.put(`${BASE_URL}/restaurants/update`, body, config)
+            await axios.put(`${BASE_URL}/providers/update`, body, config)
             alert("Provider updated successfully!")
             navigate('/profile')
         } catch (error: any) {
