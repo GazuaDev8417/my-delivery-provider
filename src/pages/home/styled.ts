@@ -162,9 +162,7 @@ export const Container = styled.div`
     }
   }
 
-  .product-image {
-    width: 90px;
-    height: 90px;  
+  .product-image { 
     object-fit: cover;
     border-radius: 8px;
     flex-shrink: 0;
@@ -198,6 +196,12 @@ export const Container = styled.div`
       font-weight: 700;
       color: #1e293b;
       font-size: 1rem;
+    }
+
+    .price-container{
+      display: flex;
+      align-items: center;
+      gap: 30px;
     }
   }
 

@@ -15,6 +15,7 @@ export interface Products{
     name:string
     photoUrl:string
     price:number
+    stock:number
     provider:string
 }
 

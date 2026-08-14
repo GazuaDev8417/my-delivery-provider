@@ -218,7 +218,10 @@ const Home: FC = () => {
                     <div className="product-desc">
                       <h4>{product.name}</h4>
                       <p>{product.description}</p>
-                      <div className="price-tag">R$ {Number(product.price).toFixed(2)}</div>
+                      <div className="price-container">
+                        <div className="price-tag">R$ {Number(product.price).toFixed(2)}</div>
+                        <div className="price-tag">Stock: {product.stock}</div>
+                      </div>
                     </div>
                     
                     <div className="btn-button">
