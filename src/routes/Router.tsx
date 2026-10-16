@@ -5,6 +5,7 @@ import { useGlobal } from '../hooks/useGlobal'
 
 
 const Login = lazy(() => import('../pages/login/Login'))
+const Signup = lazy(() => import('../pages/signup/Signup'))
 const ResetPassword = lazy(() => import('../pages/resetPassword/ResetPassword'))
 const Orders = lazy(() => import('../pages/orders/Orders'))
 const ClientData = lazy(() => import('../pages/clientData/ClientData'))
@@ -42,6 +43,7 @@ const Router: FC = () => {
       <Routes>
         {/* 🔓 Public Entry Routes */}
         <Route path={ProviderRoutes.LOGIN} element={<Login />} />
+        <Route path={ProviderRoutes.SIGNUP} element={<Signup />} />
         <Route path={ProviderRoutes.RESET_PASSWORD} element={<ResetPassword/>}/>
 
         {/* 🔒 Protected Workspace Routes (Intercepted by Guard) */}

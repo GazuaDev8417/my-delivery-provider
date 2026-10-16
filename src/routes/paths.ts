@@ -1,5 +1,6 @@
 export const ProviderRoutes = {
   LOGIN: '/',
+  SIGNUP: '/signup',
   ORDERS: '/orders',
   CLIENT_DATA: '/client_data',
   HOME: '/home',

@@ -98,7 +98,7 @@ const Login:FC = ()=>{
                     required
                 />
 
-                <label htmlFor="login-password" className="sr-only">Senha</label>
+                <label htmlFor="login-password" className="sr-only">Password</label>
                 <div style={{ position: 'relative', width: '100%' }}>
                     <input
                     id="login-password"
@@ -142,7 +142,8 @@ const Login:FC = ()=>{
                 </div>
                 <div className="bottom-container">
                     <span
-                        style={{cursor:'pointer', color:'blue '}}>Signup</span>
+                        style={{cursor:'pointer', color:'blue '}}
+                        onClick={() => navigate(ProviderRoutes.SIGNUP)} >Signup</span>
                     <span 
                         style={{cursor:'pointer', color:'blue '}}
                         onClick={() => setIsModalOpen(true)}>Forgot my password</span>

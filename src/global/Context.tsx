@@ -10,6 +10,7 @@ interface GlobalStateContextType {
   loading: boolean
   loginProvider: (token: string) => void
   logoutProvider: () => void
+  signupProvider: (token: string) => void
   user: Restaurant | null  
   getProfile: () => void
   notifications:ProviderNotifications[]
@@ -68,6 +69,12 @@ export const GlobalStateProvider:FC<GlobalStateProviderProps> = ({ children })=>
     }
 
 
+    const signupProvider = (token:string)=>{
+        localStorage.setItem('@MyDeliveryProvider:token', token)
+        setProviderToken(token)
+    }
+
+
     const logoutProvider = ()=>{
         localStorage.clear()
         
@@ -81,7 +88,7 @@ export const GlobalStateProvider:FC<GlobalStateProviderProps> = ({ children })=>
     return(
         <GlobalStateContext.Provider value={{
             providerToken, loading, loginProvider, 
-            logoutProvider, getProfile, user,
+            logoutProvider, signupProvider, getProfile, user,
             notifications, setNotifications
         }}>
             {children}
