@@ -154,11 +154,13 @@ export const Container = styled.div`
     }
   }
 
-  p {
-    margin-top: 1.5rem;
-    font-size: 0.925rem;
-    color: #64748b;
-    text-align: center;
+  .bottom-container{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 30px;
+      margin-left: 10px;
   }
 
   a {

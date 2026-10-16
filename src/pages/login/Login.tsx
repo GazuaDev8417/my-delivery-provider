@@ -140,10 +140,14 @@ const Login:FC = ()=>{
                     {isSubmitting ? "Loading..." : "Enter"}
                 </button>
                 </div>
-            </form>
-            {/* <p 
-                style={{cursor:'pointer', color:'blue '}}
-                onClick={() => setIsModalOpen(true)}>Forgot my password</p> */}
+                <div className="bottom-container">
+                    <span
+                        style={{cursor:'pointer', color:'blue '}}>Signup</span>
+                    <span 
+                        style={{cursor:'pointer', color:'blue '}}
+                        onClick={() => setIsModalOpen(true)}>Forgot my password</span>
+                </div>
+            </form>            
         </Container>
     )
 
