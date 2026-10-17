@@ -8,8 +8,12 @@ import Header from "../../components/Header"
 import { ProviderRoutes } from "../../routes/paths"
 import { Container } from "./styled"
 import { formatPhoneNumber } from "../../utils/inputsAndKeys"
+import axios from "axios"
 
 
+
+
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 const Profile = ()=>{
@@ -32,6 +36,27 @@ const Profile = ()=>{
     }
 
 
+    const handleDeleteAccount = async()=>{
+        const confirmDelete = window.confirm('Are you sure you want to delete your account? This action cannot be undone.')
+        if(!confirmDelete) return
+
+        const config = {
+            headers: { Authorization: localStorage.getItem('@MyDeliveryProvider:token') }
+        }
+
+        try{
+            await axios.delete(`${BASE_URL}/providers/account`, config)
+            localStorage.clear()
+            navigate('/', { replace: true })
+        }catch(e:any){
+            alert(e?.response?.data?.message || e?.response?.data || 'An error occurred while trying to delete your account.')
+        }
+    }
+
+
+
+
+
     return(
         <>
             <Header
@@ -51,6 +76,14 @@ const Profile = ()=>{
                     </div>
                     <MdEdit className="icon" onClick={() => navigate(ProviderRoutes.EDIT_PROFILE)} />
                 </div>  
+                <div className="danger-zone">
+                    <button
+                        type="button"
+                        className="btn-delete-subtle"
+                        onClick={handleDeleteAccount}>
+                        Delete Account
+                    </button>
+                </div>
             </Container>
         </>
     )    

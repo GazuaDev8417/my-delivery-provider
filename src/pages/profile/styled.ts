@@ -63,6 +63,24 @@ export const Container = styled.div`
         }
     }
 
+    .danger-zone {
+        border: 1px solid;
+        border-radius: 5px;
+        margin-top: 12rem; /* espaço antes do footer */
+    }
+
+    .danger-zone .btn-delete-subtle {
+        background-color: transparent;
+        color: #dc2b2b;
+        font-weight: 400;
+        box-shadow: none;
+    }
+
+    .danger-zone .btn-delete-subtle:hover {
+        background-color: transparent;
+        box-shadow: none;
+    }
+
     /* MEDIA QUERIES */
     @media(max-width: 660px){
         h1 {

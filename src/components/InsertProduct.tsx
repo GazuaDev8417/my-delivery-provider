@@ -156,7 +156,6 @@ const InsertProduct: FC<InsertProductProps> = ({ setScreen }) => {
     if (image) {
       formData.append('image', image);
     }
-
     try {
       setIsSubmitting(true);
       
