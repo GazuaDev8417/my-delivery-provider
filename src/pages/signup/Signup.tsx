@@ -15,7 +15,6 @@ interface FormData{
     address:string
     phone:string
     email:string
-    logourl:string
     password:string
     description:string
 }
@@ -28,12 +27,12 @@ const Signup:FC = ()=>{
     const navigate = useNavigate();
     const { providerToken, loading, signupProvider } = useGlobal();    
     const [showPass, setShowPass] = useState<boolean>(false);
+    const [image, setImage] = useState<File | null>(null)
     const [form, setForm] = useState<FormData>({
         name:'',
         address:'',
         phone:'',
         email:'',
-        logourl:'',
         password: '',
         description:''
     });
@@ -55,10 +54,9 @@ const Signup:FC = ()=>{
 
 
     const handleFileChange = (e:ChangeEvent<HTMLInputElement>):void=>{
-        const file = e.target.files?.[0]
-        if(!file) return
-
-        setForm(prev => ({ ...prev, logourl: file.name }))
+        if(e.target.files && e.target.files[0]){
+            setImage(e.target.files[0])
+        }
     }
 
 
@@ -69,7 +67,6 @@ const Signup:FC = ()=>{
             address:'',
             phone:'',
             email:'',
-            logourl:'',
             password: '',
             description:''
         })
@@ -79,18 +76,26 @@ const Signup:FC = ()=>{
     const handleFormSubmit = async(e:SubmitEvent<HTMLFormElement>):Promise<void>=>{
         e.preventDefault()
         if(isSubmitting) return
+        
+        const capitalizeFirstLetter = form.name.charAt(0).toUpperCase() + form.name.slice(1)
+        const formData = new FormData()
+
+        formData.append('name', capitalizeFirstLetter.trim())
+        formData.append('address', form.address.trim())
+        formData.append('phone', form.phone)
+        formData.append('email', form.email.trim())
+        formData.append('password', form.password.trim())
+        formData.append('description', form.description.trim())
+
+        if(image){
+            formData.append('image', image)
+        }
 
         try{
             setIsSubmitting(true)
-
-            const response = await axios.post(`${BASE_URL}/providers/signup`, {
-                name: form.name, 
-                address: form.address , 
-                phone: form.phone, 
-                email: form.email, 
-                logourl: form.logourl, 
-                password: form.password, 
-                description: form.description
+            
+            const response = await axios.post(`${BASE_URL}/providers/signup`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
             })
 
             signupProvider(response.data)

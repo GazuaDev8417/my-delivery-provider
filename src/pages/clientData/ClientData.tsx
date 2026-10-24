@@ -58,6 +58,32 @@ const ClientData:FC = ()=>{
     }, [fetchClientWorkspace])
 
 
+    const totalPending = useMemo(() => {
+        return orders
+            .filter(order => order.state === 'REQUESTED')
+            .reduce(
+                (sum, order) => sum + Number(order.price) * Number(order.quantity),
+                0
+            )
+    }, [orders])
+
+    const totalCompleted = useMemo(() => {
+        return orders
+            .filter(order => order.state === 'FINISHED')
+            .reduce(
+                (sum, order) => sum + Number(order.price) * Number(order.quantity),
+                0
+            )
+    }, [orders])
+
+    const grandTotal = useMemo(() => {
+        return orders.reduce(
+            (sum, order) => sum + Number(order.price) * Number(order.quantity),
+            0
+        )
+    }, [orders])
+
+
     const handleUpdateOrderStatus = async(orderId:string, targetState:'finish' | 'return')=>{
         if(isMutating) return
 
@@ -129,8 +155,13 @@ const ClientData:FC = ()=>{
 
                 <div className='sticky-title'>
                     <div id="history" className="order-history">Active orders from {user?.username}</div>
-                    <hr style={{ width: '100%', marginBottom: '15px', backgroundColor: '#e2e8f0', border: 'none', height: '1px' }} />
+                    <div>
+                        <strong>Pending:</strong> R$ {totalPending.toFixed(2)}{' | '}
+                        <strong>Completed:</strong> R$ {totalCompleted.toFixed(2)}{' | '}
+                        <strong>Grand total:</strong> R$ {grandTotal.toFixed(2)}
+                    </div>
                 </div>
+                <hr style={{ width: '100%', marginBottom: '15px', backgroundColor: '#e2e8f0', border: 'none', height: '1px' }} />
                 
                 {orders.length === 0 && (
                 <div style={{ color: '#64748b', padding: '1rem 0' }}>This customer doesn't have active orders.</div>

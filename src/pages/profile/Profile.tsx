@@ -49,6 +49,7 @@ const Profile = ()=>{
             localStorage.clear()
             navigate('/', { replace: true })
         }catch(e:any){
+            console.error(e)
             alert(e?.response?.data?.message || e?.response?.data || 'An error occurred while trying to delete your account.')
         }
     }
