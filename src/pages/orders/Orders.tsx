@@ -135,7 +135,7 @@ const Orders:FC = ()=>{
                 <div className="card-container">
                     {activeGroup ? (
                         <>
-                            <h3 className="total-title">Total R$ {activeGroup.total.toFixed(2)}</h3>
+                            <h3 className="total-title">Total Order Value (per customer) R$ {activeGroup.total.toFixed(2)}</h3>
                             {activeGroup.items.map(order=>(
                                 <div className="card" key={order.id}>
                                     <div className="card-content">

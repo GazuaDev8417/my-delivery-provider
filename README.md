@@ -1,61 +1,76 @@
-# 🏪 My Delivery Provider — Merchant Operations Hub
+# My Delivery Provider
 
-[![Live Demo](https://img.shields.io/badge/Live_App-Try_It_Now-2ea44f?style=for-the-badge&logo=vercel)](https://my-delivery-provider.vercel.app)
-[![Portfolio](https://img.shields.io/badge/Author-Flamarion_França-007acc?style=for-the-badge&logo=render)](https://portfolio-vtu0.onrender.com)
+A store operations web application for restaurants and other businesses that receive orders through the My Delivery ecosystem. Store teams use Provider to review orders, view customer details, and manage their catalog and store profile.
 
-> **Ecosystem Core:** *My Delivery Provider* is the operational dashboard designed for restaurant managers and store operators. It handles real-time order processing sent from **[My Delivery](https://my-delivery-silk.vercel.app)** and feeds financial metrics directly into the **[SaaS Control Panel](https://dashboard-project-nu-one.vercel.app/)**, all orchestrated by **My Delivery Server**.
+## The My Delivery ecosystem
 
----
+Provider is one of three applications connected through the My Delivery Server API:
 
-## ⚡ Interactive Live Demo
+- **My Delivery** — the customer app for discovering stores, choosing products, and placing orders.
+- **My Delivery Provider** — the store operations dashboard for reviewing incoming orders, updating their status, and managing products.
+- **SaaS Dashboard** — the management and monitoring dashboard for the ecosystem.
+- **My Delivery Server** — the central API that connects the applications, authenticates users, persists data, and integrates platform services.
 
-Experience how merchant order fulfillment and store management operate in real time:
+The main flow starts in the My Delivery customer app. The API records each order and makes it available in the Provider dashboard, where the store can review and update it.
 
-* 🌐 **Live Merchant Portal:** [https://my-delivery-provider.vercel.app](https://my-delivery-provider.vercel.app)
-* 🛒 **Consumer App (To place test orders):** [https://my-delivery-silk.vercel.app](https://my-delivery-silk.vercel.app)
-* 💼 **Developer Portfolio:** [https://portfolio-vtu0.onrender.com](https://portfolio-vtu0.onrender.com)
+## Features
 
-🔑 **Demo Merchant Credentials:**
-* **Admin 1:** `admin1@example.com` | Password: `password123`
-* **Admin 2:** `admin2@example.com` | Password: `password123`
+- Store sign-up and login, password reset, and authentication-protected routes.
+- View orders grouped by status: pending (`REQUESTED`) and completed (`FINISHED`).
+- View each customer's profile and order history, and mark orders as completed or return them to pending.
+- View the value of listed orders and remove completed orders.
+- Manage the product catalog: create, edit, and remove products with a category, description, price, stock, and image.
+- Search products within the selected category.
+- Edit store details, view notifications, and manage the account.
 
-> 💡 **Suggested Test Flow:** Open *My Delivery* and *My Delivery Provider* in side-by-side tabs. Log into the provider app with one of the credentials above, place an order via the consumer app, and — after refreshing "My Delivery Provider" — watch the order hydrate directly into your merchant dashboard!
+## Tech stack
 
----
+- React 19, TypeScript, and Vite
+- React Router
+- Styled Components
+- Axios
 
-## 🌟 Technical Highlights & Engineering Decisions
+## Run locally
 
-Engineered with **React**, **TypeScript**, and **Styled Components**, this administrative application simulates high-efficiency store operations, emphasizing concurrency protection, optimized real-time calculations, and dynamic catalog state management:
+Requires Node.js and npm. From this project directory:
 
-* **📊 Real-Time Order Pipeline (`Orders` Page):** Classifies incoming transactions (`REQUESTED` vs. `FINISHED`) and dynamically calculates category-level revenue totals in real time using memoized execution pipelines (`useMemo`).
-* **🔒 Concurrency Protection (`ClientData` Page):** Implements asynchronous mutation locks (`isMutating` state safeguards) across status toggles to prevent network race conditions or duplicate fulfillment requests during rapid operator clicks.
-* **📦 Dynamic Multi-View Catalog Engine (`Profile` Page):** Operates an in-page view state machine (`List`, `Insert`, `Update`) that enables seamless menu changes without full-page reloads, supported by `useRef` auto-scrolling and `onError` image fallbacks.
-* **🔍 Scoped Search Indexing:** Restricts live catalog filtering to the currently selected category, maintaining optimal client-side render speed regardless of menu size.
-* **🔔 Cross-Platform Sync:** Instantly receives orders placed via the consumer application while triggering automated platform notifications upon menu or availability adjustments.
+```bash
+npm install
+```
 
----
+Create a `.env` file in the project root with the API base URL:
 
-## 🏗️ Operations & Data Architecture
+```env
+VITE_BASE_URL=http://localhost:3003
+```
 
-```text
-  ┌───────────────────────────┐
-  │   My Delivery (Client)    │
-  └─────────────┬─────────────┘
-                │ 1. Places Live Order
-                ▼
-  ┌───────────────────────────┐
-  │   My Delivery Server      │
-  │    (Centralized API)      │
-  └─────────────┬─────────────┘
-                │ 2. Real-Time Order Dispatch
-                ▼
-  ┌───────────────────────────┐
-  │   My Delivery Provider    │
-  └─────────────┬─────────────┘
-                │
-     ┌──────────┴────────────────────────────┐
-     ▼                                       ▼
-┌───────────────────────────┐   ┌───────────────────────────┐
-│  State Status Machine     │   │  Revenue Calculations     │
-│  (Pending ↔ Completed Lock)│   │  (Dynamic Category Totals)│
-└───────────────────────────┘   └───────────────────────────┘
+To make links from new-order notifications navigate to the correct page, also configure:
+
+```env
+VITE_RESTAURANT_NOTIFICATION_URL=/orders
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Other available commands:
+
+```bash
+npm run build
+npm run preview
+npm run lint
+```
+
+## API integration
+
+Provider uses the URL configured in `VITE_BASE_URL` as the base for the `/providers`, `/orders`, `/users`, and `/provider-notifications` routes on My Delivery Server. Authenticated actions send the store's token in the `Authorization` header.
+
+## Related applications
+
+- [My Delivery — customer app](https://my-delivery-silk.vercel.app)
+- [My Delivery Provider — web app](https://my-delivery-provider.vercel.app)
+- [My Delivery Server — API documentation](https://my-delivery-server-nine.vercel.app/api-docs/)
+- [Portfolio](https://portfolio-vtu0.onrender.com)
