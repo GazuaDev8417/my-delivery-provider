@@ -22,7 +22,6 @@ const ClientData:FC = ()=>{
     const [isUiLoading, setIsUiLoading] = useState<boolean>(true)
     const [isMutating, setIsMutating] = useState<boolean>(false)
 
-    
     // 🛡️ Memoized authorization headers to safeguard dependency cycles
     const requestConfig = useMemo(() => ({
         headers: { Authorization: providerToken || '' }
