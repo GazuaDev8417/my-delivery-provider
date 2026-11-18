@@ -10,6 +10,13 @@ import { Container } from "./styled"
 
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
+const getOrderStateLabel = (state:string):string =>{
+    if (state === 'REQUESTED') return 'Pending'
+    if (state === 'FINISHED') return 'Completed'
+    if (state === 'EXPIRED') return 'Expired'
+
+    return state
+}
 
 
 const Orders:FC = ()=>{
@@ -52,7 +59,12 @@ const Orders:FC = ()=>{
 
 
     const handleRemoveOrder = async(order:Order)=>{
-        const confirmDelete = window.confirm(`Are you sure you want to remove ${order.product} from order's list?`)
+        const confirmationMessage = order.state === 'EXPIRED'
+            ? `Archive expired order ${order.product}? It will be hidden from the provider lists.`
+            : `Are you sure you want to remove ${order.product} from order's list?`
+
+        const confirmDelete = window.confirm(confirmationMessage)
+        
         if(!confirmDelete) return
 
         try{
@@ -118,7 +130,7 @@ const Orders:FC = ()=>{
                 <div className="categories-bar">
                     {groupedOrders.map(group => (
                         <h3
-                        title={group.state === 'REQUESTED' ? "Click to see the pending orders" : "Click to see the completed orders"}
+                        title={`Click to see ${getOrderStateLabel(group.state).toLowerCase()}`}
                         key={group.state}
                         onClick={() => setOpenState(group.state)}
                         style={{
@@ -126,7 +138,7 @@ const Orders:FC = ()=>{
                             cursor: 'pointer',
                             margin: '0 15px'
                         }}>
-                        {group.state === 'REQUESTED' ? 'Pending' : 'Completed'}
+                        {getOrderStateLabel(group.state)}
                         </h3>
                     ))}
                 </div>
@@ -145,7 +157,7 @@ const Orders:FC = ()=>{
                                         <b>Quantity:</b> {order.quantity} <br />
                                         <b>Total:</b> {Number(order.total).toFixed(2)} <br />
                                         <b>Address:</b> {order.address} <br />
-                                        <b>Status:</b> {order.state === 'REQUESTED' ? 'To delivery' : 'Completed'} <br />
+                                        <b>Status:</b> {order.state === 'REQUESTED' ? 'To delivery' : getOrderStateLabel(order.state)} <br />
 
                                         {order.state === 'FINISHED' && order.paymentmethod && (
                                             <><b>Payment method:</b> {order.paymentmethod}</>
@@ -162,12 +174,12 @@ const Orders:FC = ()=>{
                                         See customer
                                         </button>
                                         
-                                        {order.state === 'FINISHED' && (
+                                        {order.state === 'FINISHED' || order.state === 'EXPIRED' && (
                                         <button
                                             className="remove-btn"
                                             onClick={() => handleRemoveOrder(order)}
                                         >
-                                            Remove
+                                            {order.state === 'EXPIRED' ? 'Archive' : 'Remove'}
                                         </button>
                                         )}
                                     </div>

@@ -176,25 +176,34 @@ const ClientData:FC = ()=>{
                             <b>Order place on:</b> {new Date(order.moment).toLocaleString()} <br/>
                             <b>Quantity:</b> {order.quantity}<br/>
                             <b>Total:</b> R$ {Number(order.total).toFixed(2)}<br/>
-                            <b>Status:</b> {order.state === 'FINISHED' ? 'Completed' : 'Pending'} <br />
-                            
+                            <b>Status:</b> 
+                                {
+                                    order.state === 'REQUESTED' 
+                                    ? 'Pending' 
+                                    : order.state === 'FINISHED'
+                                    ? 'Completed' 
+                                    : order.state === 'EXPIRED'
+                                    ? 'Espired'
+                                    : order.state
+                                } 
+                            <br />                            
                             <div style={{ textAlign: 'center', marginTop: '1rem' }}>
                             {order.state === 'REQUESTED' ? (
                                 <button 
                                 disabled={isMutating}
                                 onClick={() => handleUpdateOrderStatus(order.id, 'finish')}
                                 >
-                                {isMutating ? 'Atualizando...' : 'Complete Order'}
+                                {isMutating ? 'Updating...' : 'Complete Order'}
                                 </button>
-                            ) : (
+                            ) : order.state === 'FINISHED' ? (
                                 <button 
-                                disabled={isMutating}
-                                onClick={() => handleUpdateOrderStatus(order.id, 'return')}
-                                style={{ backgroundColor: '#475569' }} // Darker slate override for reversing actions
+                                    disabled={isMutating}
+                                    onClick={() => handleUpdateOrderStatus(order.id, 'return')}
+                                    style={{ backgroundColor: '#475569' }} // Darker slate override for reversing actions
                                 >
-                                {isMutating ? 'Atualizando...' : 'Back to Pending'}
+                                {isMutating ? 'Updating...' : 'Back to Pending'}
                                 </button>
-                            )}
+                            ) : null}
                             </div>
                         </div>
                     </div>
