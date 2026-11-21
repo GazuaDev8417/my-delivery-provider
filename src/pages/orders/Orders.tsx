@@ -32,10 +32,30 @@ const getOrderStatusLabel = (order:Order):string=>{
 }
 
 
+const getArchivedPaymentStatusLabel = (status?:string | null):string =>{
+    switch(status){
+        case 'APPROVED':
+            return 'Approved'
+        case 'REJECTED':
+            return 'Rejected'
+        case 'CANCELLED':
+            return 'Cancelled'
+        case 'EXPIRED':
+            return 'Expired'
+        case 'PENDING':
+            return 'Pending'
+        default:
+            return 'No payment linked'
+    }
+}
+
+
 const Orders:FC = ()=>{
     const navigate = useNavigate()
     const { providerToken, getProfile, user } = useGlobal()
     const [orders, setOrders] = useState<Order[]>([])
+    const [archivedOrders, setArchivedOrders] = useState<Order[]>([])
+    const [archivedSearch, setArchivedSearch] = useState<string>('')
     const blinkingOrderIds = usePaidOrderAlerts(orders)
     const [openState, setOpenState] = useState<string | null>(null)
     const [isUiLoading, setIsUiLoading] = useState<boolean>(true)
@@ -55,12 +75,37 @@ const Orders:FC = ()=>{
             }
 
             
-            const ordersRes = await axios.get<Order[]>(`${BASE_URL}/orders/all`, requestConfig)
-            setOrders(ordersRes.data)
+            const [ordersResult, archivedResult] = await Promise.allSettled([
+                axios.get<Order[]>(`${BASE_URL}/orders/all`, requestConfig),
+                axios.get<Order[]>(`${BASE_URL}/orders/archived`, requestConfig)
+            ])
 
-            if(ordersRes.data.length > 0){
-                setOpenState(current => current ?? ordersRes.data[0].state)
+            let activeOrdersData: Order[] | undefined
+            let archivedOrdersData: Order[] | undefined
+            
+
+            if(ordersResult.status === 'fulfilled'){
+                activeOrdersData = ordersResult.value.data
+                setOrders(activeOrdersData)
+            }else if(ordersResult.reason?.response?.status === 404){
+                activeOrdersData = []
+                setOrders([])
+            }else{
+                console.error('Could not load active orders:', ordersResult.reason)
             }
+
+            if(archivedResult.status === 'fulfilled'){
+                archivedOrdersData = archivedResult.value.data
+                setArchivedOrders(archivedOrdersData)
+            }else{
+                console.error('Could not load archived orders:', archivedResult.reason)
+            }
+
+            setOpenState(current =>
+                current ??
+                activeOrdersData?.[0]?.state ??
+                (archivedOrdersData?.length ? 'ARCHIVED' : null)
+            )
         }catch(e:any){
             console.error(e?.response?.data?.message || e?.response?.data || e)
         }finally{
@@ -119,8 +164,51 @@ const Orders:FC = ()=>{
 
 
     const activeGroup = useMemo(()=>{
+        if(openState === 'ARCHIVED'){
+            const total = archivedOrders.reduce(
+                (sum, order) => sum + Number(order.price) * Number(order.quantity),
+                0
+            )
+
+            return {
+                state: 'ARCHIVED',
+                items: archivedOrders,
+                total
+            }
+        }
+
         return groupedOrders.find(group => group.state === openState) || null
-    }, [groupedOrders, openState])
+    }, [groupedOrders, openState, archivedOrders])
+
+
+    const displaydOrders = useMemo(()=>{
+        if(!activeGroup) return []
+
+        const query = archivedSearch.trim().toLocaleLowerCase()
+
+        if(openState !== 'ARCHIVED' || !query){
+            return activeGroup.items
+        }
+
+        return activeGroup.items.filter(order =>{
+            const searchableValues = [
+                order.client,
+                order.product,
+                order.state,
+                order.payment_status,
+                getArchivedPaymentStatusLabel(order.payment_status),
+                new Date(order.moment).toLocaleDateString('pt-BR'),
+                order.archived_at
+                    ? new Date(order.archived_at).toLocaleDateString('pt-BR')
+                    : ''
+            ]
+
+            return searchableValues.some(value =>
+                String(value ?? '').toLocaleLowerCase().includes(query)
+            )
+        })
+    }, [activeGroup, archivedSearch, openState])
+
 
     if(isUiLoading){
         return <div style={{ textAlign: 'center', marginTop: '20vh' }}>Updataing orders dashboard...</div>
@@ -154,25 +242,49 @@ const Orders:FC = ()=>{
                 <div className="categories-bar">
                     {groupedOrders.map(group => (
                         <h3
-                        title={`Click to see ${getOrderStateLabel(group.state).toLowerCase()}`}
-                        key={group.state}
-                        onClick={() => setOpenState(group.state)}
-                        style={{
-                            color: openState === group.state ? "red" : "black",
-                            cursor: 'pointer',
-                            margin: '0 15px'
+                            title={`Click to see ${getOrderStateLabel(group.state).toLowerCase()}`}
+                            key={group.state}
+                            onClick={() => setOpenState(group.state)}
+                            style={{
+                                color: openState === group.state ? "red" : "black",
+                                cursor: 'pointer',
+                                margin: '0 15px'
                         }}>
-                        {getOrderStateLabel(group.state)}
+                            {getOrderStateLabel(group.state)}
                         </h3>
                     ))}
+
+                    <h3
+                        title="Click to see archived orders"
+                        onClick={() => setOpenState('ARCHIVED')}
+                        style={{
+                            color: openState === 'ARCHIVED' ? 'red' : 'black',
+                            cursor: 'pointer',
+                            margin: '0 15px'
+                        }}
+                    >
+                        Archived
+                    </h3>
                 </div>
                 <hr style={{ width: '100%', marginBottom: '15px', background: 'lightgray', border: 'none', height: '1px' }} />
 
                 <div className="card-container">
                     {activeGroup ? (
                         <>
-                            <h3 className="total-title">Total Order Value (per customer) R$ {activeGroup.total.toFixed(2)}</h3>
-                            {activeGroup.items.map(order=>(
+                            {openState === 'ARCHIVED' ? (
+                                <input
+                                    className="archive-search"
+                                    type="search"
+                                    value={archivedSearch}
+                                    onChange={event => setArchivedSearch(event.target.value)}
+                                    placeholder="Search by product, payment status, or date"
+                                    aria-label="Search archived orders"
+                                />
+                            ) : (
+                                    <h3 className="total-title">Total Order Value R$ {activeGroup.total.toFixed(2)}</h3>
+                                
+                            )}
+                            {displaydOrders.map(order=>(
                                 <div className={`card${blinkingOrderIds.has(order.id) ? ' card--paid-overdue' : ''}`} key={order.id}>
                                     <div className="card-content">
                                         <div className="rest-name">{order.product}</div>
@@ -181,7 +293,11 @@ const Orders:FC = ()=>{
                                         <b>Quantity:</b> {order.quantity} <br />
                                         <b>Total:</b> {Number(order.total).toFixed(2)} <br />
                                         <b>Address:</b> {order.address} <br />
-                                        <b>Status:</b> {getOrderStatusLabel(order)} <br />
+                                        <b>Status:</b> {
+                                            openState === 'ARCHIVED'
+                                                ? getArchivedPaymentStatusLabel(order.payment_status)
+                                                : getOrderStatusLabel(order)
+                                        } <br />
 
                                         {order.state === 'FINISHED' && order.paymentmethod && (
                                             <><b>Payment method:</b> {order.paymentmethod}</>
@@ -198,7 +314,8 @@ const Orders:FC = ()=>{
                                         See customer
                                         </button>
                                         
-                                        {(order.state === 'FINISHED' || order.state === 'EXPIRED') && (
+                                        {openState !== 'ARCHIVED' &&
+                                            (order.state === 'FINISHED' || order.state === 'EXPIRED') && (
                                         <button
                                             className="remove-btn"
                                             onClick={() => handleRemoveOrder(order)}
@@ -209,9 +326,19 @@ const Orders:FC = ()=>{
                                     </div>
                                 </div>
                             ))}
+
+                            {displaydOrders.length === 0 && (
+                                <div>
+                                    {archivedSearch.trim()
+                                        ? 'No archived orders match your search'
+                                        : 'No archived orders registered'}
+                                </div>
+                            )}
                         </>
                     ) : (
-                        orders.length === 0 && <div>No orders registered</div>
+                        openState === 'ARCHIVED'
+                            ? <div>No archived orders registered</div>
+                            : <div>No active orders registered</div>
                     )}
                 </div>
             </Container>

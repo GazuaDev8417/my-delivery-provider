@@ -45,6 +45,7 @@ export interface Order {
   client: string;
   payment_status?:string | null
   payment_approved_at?: Date | string | null
+  archived_at?: Date | string | null
 }
 
 export interface GroupedProducts {

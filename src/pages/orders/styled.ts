@@ -140,6 +140,18 @@ export const Container = styled.div`
     margin-bottom: 0.5rem;
   }
 
+  .archive-search {
+    grid-column: 1 / -1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 1rem;
+    border-bottom: 2px solid #ef4444;
+  }
+
   .card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
