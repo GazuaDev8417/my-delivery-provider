@@ -43,6 +43,8 @@ export interface Order {
   state: 'REQUESTED' | 'FINISHED' | string;
   paymentmethod?: string;
   client: string;
+  payment_status?:string | null
+  payment_approved_at?: Date | string | null
 }
 
 export interface GroupedProducts {

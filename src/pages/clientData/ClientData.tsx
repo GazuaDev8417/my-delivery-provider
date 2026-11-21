@@ -6,6 +6,7 @@ import { Container } from './styled'
 import Header from "../../components/Header"
 import type { Order, User } from '../../types/types'
 import { useGlobal } from '../../hooks/useGlobal'
+import { usePaidOrderAlerts } from '../../hooks/usePaidOrderAlerts'
 import { ProviderRoutes } from '../../routes/paths'
 
 
@@ -13,12 +14,26 @@ import { ProviderRoutes } from '../../routes/paths'
 const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
+const getClientOrderStatusLabel = (order:Order):String=>{
+    if(order.state === 'REQUESTED'){
+        return order.payment_status === 'APPROVED'
+            ? 'Paid - awaiting delivery'
+            : 'Awaiting payment'
+    }
+
+    if(order.state === 'FINISHED') return 'Completed'
+    if(order.state === 'EXPIRED') return 'Expired'
+
+    return order.state
+}
+
 const ClientData:FC = ()=>{
     const navigate = useNavigate()
     const { providerToken } = useGlobal()
     const userId = localStorage.getItem('userId')
     const [user, setUser] = useState<User | null>(null)
     const [orders, setOrders] = useState<Order[]>([])
+    const blinkingOrderIds = usePaidOrderAlerts(orders)
     const [isUiLoading, setIsUiLoading] = useState<boolean>(true)
     const [isMutating, setIsMutating] = useState<boolean>(false)
 
@@ -28,7 +43,7 @@ const ClientData:FC = ()=>{
     }), [providerToken])
 
 
-    const fetchClientWorkspace = useCallback(async()=>{
+    const fetchClientWorkspace = useCallback(async(showLoading = false)=>{
         if(!userId){
             console.error("Missing valid target client identification identity.")
             navigate(ProviderRoutes.ORDERS)
@@ -36,6 +51,8 @@ const ClientData:FC = ()=>{
         }
 
         try{
+            if(showLoading) setIsUiLoading(true)
+
             const [profileRes, historyRes] = await Promise.all([
                 axios.get<User>(`${BASE_URL}/users/profile/${userId}`, requestConfig),
                 axios.get<Order[]>(`${BASE_URL}/orders/user/${userId}`, requestConfig)
@@ -46,14 +63,21 @@ const ClientData:FC = ()=>{
         }catch(e:any){
             console.error(e?.response?.data?.message || e?.response?.data || e)
         }finally{
-            setIsUiLoading(false)
+            if(showLoading) setIsUiLoading(false)
         }
     }, [userId, requestConfig, navigate])
 
 
 
     useEffect(() => {
-        fetchClientWorkspace()
+        void fetchClientWorkspace(true)
+
+        const refreshInterval = window.setInterval(
+            () => void fetchClientWorkspace(),
+            10_000
+        )
+
+        return () => window.clearInterval(refreshInterval)
     }, [fetchClientWorkspace])
 
 
@@ -168,7 +192,7 @@ const ClientData:FC = ()=>{
 
                 <div className="card-container">
                 {orders.map(order => (
-                    <div className="card" key={order.id}>
+                    <div className={`card${blinkingOrderIds.has(order.id) ? ' card--paid-overdue': ''}`} key={order.id}>
                         <div className="card-content">
                             <div className="rest-name">
                             {order.product} — R$ {Number(order.price).toFixed(2)}
@@ -176,24 +200,20 @@ const ClientData:FC = ()=>{
                             <b>Order place on:</b> {new Date(order.moment).toLocaleString()} <br/>
                             <b>Quantity:</b> {order.quantity}<br/>
                             <b>Total:</b> R$ {Number(order.total).toFixed(2)}<br/>
-                            <b>Status:</b> 
-                                {
-                                    order.state === 'REQUESTED' 
-                                    ? 'Pending' 
-                                    : order.state === 'FINISHED'
-                                    ? 'Completed' 
-                                    : order.state === 'EXPIRED'
-                                    ? 'Espired'
-                                    : order.state
-                                } 
+                            <b>Status:</b>  {getClientOrderStatusLabel(order)}
                             <br />                            
                             <div style={{ textAlign: 'center', marginTop: '1rem' }}>
                             {order.state === 'REQUESTED' ? (
                                 <button 
-                                disabled={isMutating}
+                                disabled={isMutating || order.payment_status !== 'APPROVED'}
                                 onClick={() => handleUpdateOrderStatus(order.id, 'finish')}
                                 >
-                                {isMutating ? 'Updating...' : 'Complete Order'}
+                                {isMutating 
+                                    ? 'Updating...' 
+                                    : order.payment_status === 'APPROVED'
+                                    ? 'Complete Order'
+                                    : 'Awaiting payment'
+                                }
                                 </button>
                             ) : order.state === 'FINISHED' ? (
                                 <button 

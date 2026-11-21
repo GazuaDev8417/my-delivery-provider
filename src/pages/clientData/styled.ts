@@ -110,6 +110,28 @@ export const Container = styled.div`
     }
   }
 
+  @keyframes paid-order-border-blink {
+    0%, 100% {
+      border-color: #dc2626;
+    }
+
+    50% {
+      border-color: transparent;
+    }
+  }
+
+  .card--paid-overdue {
+    border: 2px solid #dc2626;
+    animation: paid-order-border-blink 1s steps(1, end) infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card--paid-overdue {
+      border: 2px solid #dc2626;
+      animation: none;
+    }
+  }
+
   .card-content {
     display: flex;
     flex-direction: column;

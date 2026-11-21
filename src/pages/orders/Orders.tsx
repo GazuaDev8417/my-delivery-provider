@@ -1,9 +1,10 @@
-import { useEffect, useState, useMemo, type FC } from "react"
+import { useEffect, useState, useMemo, useCallback, type FC } from "react"
 import { useNavigate } from "react-router-dom"
 import { IoMdHome } from "react-icons/io";
 import axios from "axios"
 import Header from "../../components/Header"
 import { useGlobal } from "../../hooks/useGlobal"
+import { usePaidOrderAlerts } from "../../hooks/usePaidOrderAlerts";
 import { ProviderRoutes } from "../../routes/paths"
 import type { Order, GroupedProducts } from "../../types/types"
 import { Container } from "./styled"
@@ -18,11 +19,24 @@ const getOrderStateLabel = (state:string):string =>{
     return state
 }
 
+const getOrderStatusLabel = (order:Order):string=>{
+    if(order.state === 'REQUESTED' && order.payment_status === 'APPROVED'){
+        return `Paid - awaiting delivery`
+    }
+
+    if(order.state === 'REQUESTED'){
+        return `Awaiting payment`
+    }
+
+    return getOrderStateLabel(order.state)
+}
+
 
 const Orders:FC = ()=>{
     const navigate = useNavigate()
     const { providerToken, getProfile, user } = useGlobal()
     const [orders, setOrders] = useState<Order[]>([])
+    const blinkingOrderIds = usePaidOrderAlerts(orders)
     const [openState, setOpenState] = useState<string | null>(null)
     const [isUiLoading, setIsUiLoading] = useState<boolean>(true)
 
@@ -33,35 +47,45 @@ const Orders:FC = ()=>{
     }), [providerToken])
 
 
-    const fetchDashboardData = async()=>{
+    const fetchDashboardData = useCallback(async(showLoading = true)=>{
         try{
-            setIsUiLoading(true)
+            if(showLoading){
+                setIsUiLoading(true)
+                getProfile()
+            }
 
-            getProfile()
             
             const ordersRes = await axios.get<Order[]>(`${BASE_URL}/orders/all`, requestConfig)
             setOrders(ordersRes.data)
 
-            if(ordersRes.data.length > 0 && !openState){
-                setOpenState(ordersRes.data[0].state)
+            if(ordersRes.data.length > 0){
+                setOpenState(current => current ?? ordersRes.data[0].state)
             }
         }catch(e:any){
             console.error(e?.response?.data?.message || e?.response?.data || e)
         }finally{
-            setIsUiLoading(false)
+            if(showLoading) setIsUiLoading(false)
         }
-    }
+    
+    }, [requestConfig, getProfile])
 
 
     useEffect(()=>{
-        fetchDashboardData()
+        void fetchDashboardData()
+
+        const refreshInterval = window.setInterval(
+            () => void fetchDashboardData(false),
+            10_000
+        )
+
+        return () => window.clearInterval(refreshInterval)
     }, [requestConfig])
 
 
     const handleRemoveOrder = async(order:Order)=>{
         const confirmationMessage = order.state === 'EXPIRED'
             ? `Archive expired order ${order.product}? It will be hidden from the provider lists.`
-            : `Are you sure you want to remove ${order.product} from order's list?`
+            : `Archive completed order ${order.product}? It will be hidden from the provider lists?`
 
         const confirmDelete = window.confirm(confirmationMessage)
         
@@ -124,7 +148,7 @@ const Orders:FC = ()=>{
                 
                 <div style={{textAlign:'center'}}>
                     <div id="history" className="order-history">Orders List</div> <br />
-                    <small>By clicking on Pending or Completed, you can view the corresponding orders.</small>
+                    <small>By clicking on Pending, Completed or Expired, you can view the corresponding orders.</small>
                 </div>
 
                 <div className="categories-bar">
@@ -149,7 +173,7 @@ const Orders:FC = ()=>{
                         <>
                             <h3 className="total-title">Total Order Value (per customer) R$ {activeGroup.total.toFixed(2)}</h3>
                             {activeGroup.items.map(order=>(
-                                <div className="card" key={order.id}>
+                                <div className={`card${blinkingOrderIds.has(order.id) ? ' card--paid-overdue' : ''}`} key={order.id}>
                                     <div className="card-content">
                                         <div className="rest-name">{order.product}</div>
                                         R$ {Number(order.price).toFixed(2)} <br />
@@ -157,7 +181,7 @@ const Orders:FC = ()=>{
                                         <b>Quantity:</b> {order.quantity} <br />
                                         <b>Total:</b> {Number(order.total).toFixed(2)} <br />
                                         <b>Address:</b> {order.address} <br />
-                                        <b>Status:</b> {order.state === 'REQUESTED' ? 'To delivery' : getOrderStateLabel(order.state)} <br />
+                                        <b>Status:</b> {getOrderStatusLabel(order)} <br />
 
                                         {order.state === 'FINISHED' && order.paymentmethod && (
                                             <><b>Payment method:</b> {order.paymentmethod}</>
@@ -174,12 +198,12 @@ const Orders:FC = ()=>{
                                         See customer
                                         </button>
                                         
-                                        {order.state === 'FINISHED' || order.state === 'EXPIRED' && (
+                                        {(order.state === 'FINISHED' || order.state === 'EXPIRED') && (
                                         <button
                                             className="remove-btn"
                                             onClick={() => handleRemoveOrder(order)}
                                         >
-                                            {order.state === 'EXPIRED' ? 'Archive' : 'Remove'}
+                                            Archive
                                         </button>
                                         )}
                                     </div>
